@@ -153,8 +153,10 @@ export default function Admin() {
       </div>
 
       <Tabs defaultValue="articles">
-        <TabsList>
+        <TabsList className="flex-wrap">
           <TabsTrigger value="articles">Articles</TabsTrigger>
+          <TabsTrigger value="spotlight">Spotlight</TabsTrigger>
+          <TabsTrigger value="podcasts">Podcasts</TabsTrigger>
           <TabsTrigger value="comments">Comments</TabsTrigger>
           <TabsTrigger value="subscribers">Subscribers</TabsTrigger>
         </TabsList>
