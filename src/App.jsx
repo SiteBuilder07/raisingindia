@@ -12,6 +12,7 @@ import Categories from '@/pages/Categories';
 import Search from '@/pages/Search';
 import Bookmarks from '@/pages/Bookmarks';
 import Admin from '@/pages/Admin';
+import Podcasts from '@/pages/Podcasts';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
