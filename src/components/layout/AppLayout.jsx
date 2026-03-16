@@ -36,6 +36,15 @@ export default function AppLayout() {
 
             {/* Desktop Nav */}
             <nav className="hidden md:flex items-center gap-1">
+              <Link to="/Newsletter">
+                <Button
+                  size="sm"
+                  className={`gap-2 rounded-full font-bold border-2 ${pathname === '/Newsletter' ? 'bg-accent text-white border-accent' : 'bg-accent/10 text-accent border-accent/30 hover:bg-accent hover:text-white'}`}
+                >
+                  <Mail className="w-4 h-4" />
+                  Newsletter
+                </Button>
+              </Link>
               {NAV_ITEMS.map(({ path, label, icon: Icon }) => (
                 <Link key={path} to={path}>
                   <Button
@@ -77,6 +86,14 @@ export default function AppLayout() {
         {/* Mobile Nav */}
         {mobileOpen && (
           <div className="md:hidden border-t border-border bg-white px-4 py-3 space-y-1">
+            <Link to="/Newsletter" onClick={() => setMobileOpen(false)}>
+              <Button
+                className={`w-full justify-start gap-3 rounded-full font-bold ${pathname === '/Newsletter' ? 'bg-accent text-white' : 'bg-accent/10 text-accent hover:bg-accent hover:text-white'}`}
+              >
+                <Mail className="w-4 h-4" />
+                Newsletter
+              </Button>
+            </Link>
             {NAV_ITEMS.map(({ path, label, icon: Icon }) => (
               <Link key={path} to={path} onClick={() => setMobileOpen(false)}>
                 <Button
