@@ -217,9 +217,25 @@ export default function Admin() {
         </TabsContent>
 
         <TabsContent value="spotlight" className="mt-6">
-          <p className="text-xs text-muted-foreground mb-4 font-semibold">
-            Approve submissions to feature them in the Spotlight section on the homepage. ⭐ = currently featured.
-          </p>
+          <div className="flex items-center justify-between mb-4">
+            <p className="text-xs text-muted-foreground font-semibold">
+              Approve submissions to feature them on the homepage. ⭐ = currently featured.
+            </p>
+            <Button size="sm" className="gap-2" onClick={() => { setEditingSpotlight(null); setShowSpotlightEditor(true); }}>
+              <Plus className="w-4 h-4" /> New Item
+            </Button>
+          </div>
+
+          {showSpotlightEditor && (
+            <div className="mb-4">
+              <SpotlightEditor
+                item={editingSpotlight}
+                onSave={() => { setShowSpotlightEditor(false); setEditingSpotlight(null); queryClient.invalidateQueries({ queryKey: ['admin-spotlight'] }); }}
+                onCancel={() => { setShowSpotlightEditor(false); setEditingSpotlight(null); }}
+              />
+            </div>
+          )}
+
           <div className="space-y-3">
             {spotlightItems.map(item => (
               <div key={item.id} className="flex gap-4 items-center bg-card border border-border rounded-xl p-4">
@@ -249,26 +265,45 @@ export default function Admin() {
                       <XCircle className="w-4 h-4 text-destructive" />
                     </Button>
                   )}
+                  <Button variant="ghost" size="icon" onClick={() => { setEditingSpotlight(item); setShowSpotlightEditor(true); }}>
+                    <Pencil className="w-4 h-4" />
+                  </Button>
                   <Button variant="ghost" size="icon" onClick={() => deleteSpotlight(item.id)}>
                     <Trash2 className="w-4 h-4 text-destructive" />
                   </Button>
                 </div>
               </div>
             ))}
-            {spotlightItems.length === 0 && (
+            {spotlightItems.length === 0 && !showSpotlightEditor && (
               <div className="text-center py-12 text-muted-foreground">No submissions yet.</div>
             )}
           </div>
         </TabsContent>
 
         <TabsContent value="podcasts" className="mt-6">
+          <div className="flex items-center justify-between mb-4">
+            <p className="text-sm font-semibold text-muted-foreground">Manage podcast episodes</p>
+            <Button size="sm" className="gap-2" onClick={() => { setEditingPodcast(null); setShowPodcastEditor(true); }}>
+              <Plus className="w-4 h-4" /> New Episode
+            </Button>
+          </div>
+
+          {showPodcastEditor && (
+            <div className="mb-4">
+              <PodcastEditor
+                podcast={editingPodcast}
+                onSave={() => { setShowPodcastEditor(false); setEditingPodcast(null); queryClient.invalidateQueries({ queryKey: ['admin-podcasts'] }); }}
+                onCancel={() => { setShowPodcastEditor(false); setEditingPodcast(null); }}
+              />
+            </div>
+          )}
+
           <div className="space-y-3">
             {podcasts.map(ep => (
               <div key={ep.id} className="flex gap-4 items-center bg-card border border-border rounded-xl p-4">
-                {ep.cover_image && (
+                {ep.cover_image ? (
                   <img src={ep.cover_image} alt={ep.title} className="w-12 h-12 rounded-xl object-cover flex-none" />
-                )}
-                {!ep.cover_image && (
+                ) : (
                   <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center flex-none">
                     <Headphones className="w-5 h-5 text-accent" />
                   </div>
@@ -281,9 +316,17 @@ export default function Admin() {
                   <p className="font-semibold text-sm truncate">{ep.title}</p>
                   {ep.duration && <p className="text-xs text-muted-foreground">{ep.duration}</p>}
                 </div>
+                <div className="flex gap-1 shrink-0">
+                  <Button variant="ghost" size="icon" onClick={() => { setEditingPodcast(ep); setShowPodcastEditor(true); }}>
+                    <Pencil className="w-4 h-4" />
+                  </Button>
+                  <Button variant="ghost" size="icon" onClick={() => deletePodcast(ep.id)}>
+                    <Trash2 className="w-4 h-4 text-destructive" />
+                  </Button>
+                </div>
               </div>
             ))}
-            {podcasts.length === 0 && (
+            {podcasts.length === 0 && !showPodcastEditor && (
               <div className="text-center py-12 text-muted-foreground">No podcast episodes yet.</div>
             )}
           </div>
