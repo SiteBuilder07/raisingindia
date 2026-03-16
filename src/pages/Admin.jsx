@@ -12,13 +12,11 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Plus, Pencil, Trash2, Eye, FileText, Users, BarChart3 } from 'lucide-react';
+import { Plus, Pencil, Trash2, Eye, FileText, Users, BarChart3, Star, CheckCircle2, XCircle, Headphones } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 import { Navigate } from 'react-router-dom';
 import ArticleEditor from '@/components/admin/ArticleEditor';
-
-const CATEGORIES = ['world', 'technology', 'business', 'sports', 'health', 'science', 'entertainment', 'politics'];
 
 export default function Admin() {
   const { user } = useAuth();
