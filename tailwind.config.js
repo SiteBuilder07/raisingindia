@@ -89,5 +89,16 @@ module.exports = {
   		}
   	}
   },
+  safelist: [
+    'bg-blue-500', 'bg-violet-500', 'bg-emerald-500', 'bg-orange-500',
+    'bg-rose-500', 'bg-cyan-500', 'bg-pink-500', 'bg-amber-500',
+    'text-blue-500', 'text-violet-500', 'text-emerald-500', 'text-orange-500',
+    'text-rose-500', 'text-cyan-500', 'text-pink-500', 'text-amber-500',
+    'bg-blue-500/10', 'bg-violet-500/10', 'bg-emerald-500/10', 'bg-orange-500/10',
+    'bg-rose-500/10', 'bg-cyan-500/10', 'bg-pink-500/10', 'bg-amber-500/10',
+    'text-blue-600', 'text-violet-600', 'text-emerald-600', 'text-orange-600',
+    'text-rose-600', 'text-cyan-600', 'text-pink-600', 'text-amber-600',
+    'bg-opacity-10',
+  ],
   plugins: [require("tailwindcss-animate")],
 }
