@@ -17,6 +17,8 @@ import { format } from 'date-fns';
 import { toast } from 'sonner';
 import { Navigate } from 'react-router-dom';
 import ArticleEditor from '@/components/admin/ArticleEditor';
+import PodcastEditor from '@/components/admin/PodcastEditor';
+import SpotlightEditor from '@/components/admin/SpotlightEditor';
 
 export default function Admin() {
   const { user } = useAuth();
