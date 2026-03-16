@@ -48,6 +48,7 @@ const AuthenticatedApp = () => {
         <Route path="/Search" element={<Search />} />
         <Route path="/Bookmarks" element={<Bookmarks />} />
         <Route path="/Admin" element={<Admin />} />
+        <Route path="/Podcasts" element={<Podcasts />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>
