@@ -204,6 +204,79 @@ export default function Admin() {
           </div>
         </TabsContent>
 
+        <TabsContent value="spotlight" className="mt-6">
+          <p className="text-xs text-muted-foreground mb-4 font-semibold">
+            Approve submissions to feature them in the Spotlight section on the homepage. ⭐ = currently featured.
+          </p>
+          <div className="space-y-3">
+            {spotlightItems.map(item => (
+              <div key={item.id} className="flex gap-4 items-center bg-card border border-border rounded-xl p-4">
+                {item.image_url && (
+                  <img src={item.image_url} alt={item.title} className="w-14 h-14 rounded-xl object-cover flex-none" />
+                )}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-0.5">
+                    <Badge variant={item.status === 'approved' ? 'default' : item.status === 'rejected' ? 'destructive' : 'secondary'} className="text-xs">
+                      {item.status}
+                    </Badge>
+                    {item.is_featured && <Badge className="bg-accent text-white text-xs border-0">⭐ Featured</Badge>}
+                  </div>
+                  <p className="font-semibold text-sm truncate">{item.title}</p>
+                  <p className="text-xs text-muted-foreground">
+                    By {item.author_name}{item.author_age ? `, Age ${item.author_age}` : ''}{item.author_city ? `, ${item.author_city}` : ''}
+                  </p>
+                </div>
+                <div className="flex gap-1 shrink-0">
+                  {item.status !== 'approved' && (
+                    <Button variant="ghost" size="icon" onClick={() => approveSpotlight(item)} title="Approve & Feature">
+                      <CheckCircle2 className="w-4 h-4 text-green-500" />
+                    </Button>
+                  )}
+                  {item.status !== 'rejected' && (
+                    <Button variant="ghost" size="icon" onClick={() => rejectSpotlight(item)} title="Reject">
+                      <XCircle className="w-4 h-4 text-destructive" />
+                    </Button>
+                  )}
+                  <Button variant="ghost" size="icon" onClick={() => deleteSpotlight(item.id)}>
+                    <Trash2 className="w-4 h-4 text-destructive" />
+                  </Button>
+                </div>
+              </div>
+            ))}
+            {spotlightItems.length === 0 && (
+              <div className="text-center py-12 text-muted-foreground">No submissions yet.</div>
+            )}
+          </div>
+        </TabsContent>
+
+        <TabsContent value="podcasts" className="mt-6">
+          <div className="space-y-3">
+            {podcasts.map(ep => (
+              <div key={ep.id} className="flex gap-4 items-center bg-card border border-border rounded-xl p-4">
+                {ep.cover_image && (
+                  <img src={ep.cover_image} alt={ep.title} className="w-12 h-12 rounded-xl object-cover flex-none" />
+                )}
+                {!ep.cover_image && (
+                  <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center flex-none">
+                    <Headphones className="w-5 h-5 text-accent" />
+                  </div>
+                )}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    {ep.is_latest && <Badge className="bg-accent text-white text-xs border-0">NEW</Badge>}
+                    {ep.episode_number && <span className="text-xs text-muted-foreground font-bold">Ep. {ep.episode_number}</span>}
+                  </div>
+                  <p className="font-semibold text-sm truncate">{ep.title}</p>
+                  {ep.duration && <p className="text-xs text-muted-foreground">{ep.duration}</p>}
+                </div>
+              </div>
+            ))}
+            {podcasts.length === 0 && (
+              <div className="text-center py-12 text-muted-foreground">No podcast episodes yet.</div>
+            )}
+          </div>
+        </TabsContent>
+
         <TabsContent value="comments" className="mt-6">
           <div className="space-y-3">
             {comments.map(comment => (
