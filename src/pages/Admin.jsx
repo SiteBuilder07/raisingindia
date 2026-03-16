@@ -61,6 +61,33 @@ export default function Admin() {
     },
   });
 
+  const setFeaturedArticle = async (article) => {
+    // Unfeature all, then feature selected
+    const currently = articles.filter(a => a.is_featured && a.id !== article.id);
+    await Promise.all(currently.map(a => base44.entities.Article.update(a.id, { is_featured: false })));
+    await base44.entities.Article.update(article.id, { is_featured: !article.is_featured });
+    queryClient.invalidateQueries({ queryKey: ['admin-articles'] });
+    toast.success(article.is_featured ? 'Removed from featured' : 'Set as featured article');
+  };
+
+  const approveSpotlight = async (item) => {
+    await base44.entities.SpotlightItem.update(item.id, { status: 'approved', is_featured: true });
+    queryClient.invalidateQueries({ queryKey: ['admin-spotlight'] });
+    toast.success('Spotlight item approved & featured!');
+  };
+
+  const rejectSpotlight = async (item) => {
+    await base44.entities.SpotlightItem.update(item.id, { status: 'rejected', is_featured: false });
+    queryClient.invalidateQueries({ queryKey: ['admin-spotlight'] });
+    toast.success('Spotlight item rejected');
+  };
+
+  const deleteSpotlight = async (id) => {
+    await base44.entities.SpotlightItem.delete(id);
+    queryClient.invalidateQueries({ queryKey: ['admin-spotlight'] });
+    toast.success('Deleted');
+  };
+
   const totalViews = articles.reduce((sum, a) => sum + (a.views_count || 0), 0);
   const publishedCount = articles.filter(a => a.status === 'published').length;
 
