@@ -51,23 +51,18 @@ export default function PodcastSection({ featuredArticle }) {
             )}
           </div>
 
-          <div className="relative z-10 mt-6 flex items-center justify-between">
-            <button
-              onClick={() => setPlaying(!playing)}
-              className="w-14 h-14 rounded-full bg-accent flex items-center justify-center hover:bg-accent/90 transition-colors shadow-lg shadow-accent/30"
-            >
-              <Play className="w-6 h-6 text-white fill-white ml-1" />
-            </button>
-
-            {podcast?.audio_url && (
-              <div className="flex-1 ml-4">
-                <audio
-                  controls
-                  src={podcast.audio_url}
-                  className="w-full h-8 opacity-70 hover:opacity-100 transition-opacity"
-                  style={{ filter: 'invert(1)' }}
-                />
-              </div>
+          <div className="relative z-10 mt-6 flex items-center gap-4">
+            {podcast && (
+              <Link to={`/PodcastEpisode?id=${podcast.id}`}>
+                <button className="w-14 h-14 rounded-full bg-accent flex items-center justify-center hover:bg-accent/90 transition-colors shadow-lg shadow-accent/30">
+                  <Play className="w-6 h-6 text-white fill-white ml-1" />
+                </button>
+              </Link>
+            )}
+            {podcast && (
+              <Link to={`/PodcastEpisode?id=${podcast.id}`} className="text-white/70 hover:text-white text-sm font-bold transition-colors">
+                Listen to this episode →
+              </Link>
             )}
           </div>
         </div>
