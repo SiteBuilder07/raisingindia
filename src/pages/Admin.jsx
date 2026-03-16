@@ -179,6 +179,14 @@ export default function Admin() {
                   </p>
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setFeaturedArticle(article)}
+                    title="Set as featured"
+                  >
+                    <Star className={`w-4 h-4 ${article.is_featured ? 'fill-accent text-accent' : ''}`} />
+                  </Button>
                   <Button variant="ghost" size="icon" onClick={() => handleEdit(article)}>
                     <Pencil className="w-4 h-4" />
                   </Button>
