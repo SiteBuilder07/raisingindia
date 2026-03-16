@@ -46,19 +46,20 @@ export default function SpotlightSection({ recentArticles = [] }) {
 
           <div className="flex-1 flex flex-col items-center justify-center py-4">
             {current ? (
-              <>
+              <Link to={`/SpotlightDetail?id=${current.id}`} className="flex flex-col items-center group w-full">
                 {current.image_url && (
-                  <div className="w-48 h-48 rounded-2xl overflow-hidden mb-4 shadow-md">
-                    <img src={current.image_url} alt={current.title} className="w-full h-full object-cover" />
+                  <div className="w-48 h-48 rounded-2xl overflow-hidden mb-4 shadow-md group-hover:shadow-xl transition-shadow">
+                    <img src={current.image_url} alt={current.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                   </div>
                 )}
-                <p className="font-display font-black text-center text-base">"{current.title}"</p>
+                <p className="font-display font-black text-center text-base group-hover:text-sky-600 transition-colors">"{current.title}"</p>
                 <p className="text-sm text-muted-foreground mt-1 font-semibold text-center">
                   By {current.author_name}
                   {current.author_age ? `, Age ${current.author_age}` : ''}
                   {current.author_city ? `, ${current.author_city}` : ''}
                 </p>
-              </>
+                <span className="text-xs font-bold text-sky-500 mt-2 group-hover:underline">View Details →</span>
+              </Link>
             ) : (
               <div className="text-center py-6">
                 <div className="text-6xl mb-3">🌟</div>

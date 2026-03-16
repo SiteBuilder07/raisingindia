@@ -1,5 +1,5 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { Home, Search, Bookmark, Grid3X3, PenSquare, Menu, X } from 'lucide-react';
+import { Home, Search, Bookmark, Grid3X3, PenSquare, Menu, X, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { useAuth } from '@/lib/AuthContext';
