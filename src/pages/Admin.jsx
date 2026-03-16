@@ -25,6 +25,10 @@ export default function Admin() {
   const queryClient = useQueryClient();
   const [editingArticle, setEditingArticle] = useState(null);
   const [showEditor, setShowEditor] = useState(false);
+  const [editingPodcast, setEditingPodcast] = useState(null);
+  const [showPodcastEditor, setShowPodcastEditor] = useState(false);
+  const [editingSpotlight, setEditingSpotlight] = useState(null);
+  const [showSpotlightEditor, setShowSpotlightEditor] = useState(false);
 
   if (user?.role !== 'admin') {
     return <Navigate to="/Home" replace />;
