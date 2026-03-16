@@ -1,60 +1,54 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import ArticleCard from '@/components/news/ArticleCard';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Globe, Cpu, Briefcase, Trophy, Heart, FlaskConical, Clapperboard, Landmark } from 'lucide-react';
 
 const CATEGORIES = [
-  { value: 'world', label: 'World', icon: Globe, color: 'bg-blue-500' },
-  { value: 'technology', label: 'Technology', icon: Cpu, color: 'bg-violet-500' },
-  { value: 'business', label: 'Business', icon: Briefcase, color: 'bg-emerald-500' },
-  { value: 'sports', label: 'Sports', icon: Trophy, color: 'bg-orange-500' },
-  { value: 'health', label: 'Health', icon: Heart, color: 'bg-rose-500' },
-  { value: 'science', label: 'Science', icon: FlaskConical, color: 'bg-cyan-500' },
-  { value: 'entertainment', label: 'Entertainment', icon: Clapperboard, color: 'bg-pink-500' },
-  { value: 'politics', label: 'Politics', icon: Landmark, color: 'bg-amber-500' },
+  { value: 'newborn', label: 'Newborn', emoji: '👶', color: 'bg-pink-100 text-pink-600 border-pink-200' },
+  { value: 'toddler', label: 'Toddler', emoji: '🧸', color: 'bg-yellow-100 text-yellow-600 border-yellow-200' },
+  { value: 'education', label: 'Education', emoji: '📚', color: 'bg-blue-100 text-blue-600 border-blue-200' },
+  { value: 'health', label: 'Health', emoji: '💊', color: 'bg-green-100 text-green-600 border-green-200' },
+  { value: 'activities', label: 'Activities', emoji: '🎨', color: 'bg-purple-100 text-purple-600 border-purple-200' },
+  { value: 'nutrition', label: 'Nutrition', emoji: '🥦', color: 'bg-emerald-100 text-emerald-600 border-emerald-200' },
+  { value: 'teen', label: 'Teen', emoji: '🎒', color: 'bg-indigo-100 text-indigo-600 border-indigo-200' },
+  { value: 'parenting', label: 'Parenting', emoji: '❤️', color: 'bg-rose-100 text-rose-600 border-rose-200' },
 ];
 
 export default function Categories() {
   const urlParams = new URLSearchParams(window.location.search);
-  const initialCat = urlParams.get('cat') || null;
-  const [selected, setSelected] = useState(initialCat);
+  const [selected, setSelected] = useState(urlParams.get('cat') || null);
 
   const { data: articles = [], isLoading } = useQuery({
     queryKey: ['articles'],
     queryFn: () => base44.entities.Article.filter({ status: 'published' }, '-published_date', 100),
   });
 
-  const filtered = selected
-    ? articles.filter(a => a.category === selected)
-    : articles;
+  const filtered = selected ? articles.filter(a => a.category === selected) : articles;
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
-      <h1 className="font-display text-3xl md:text-4xl font-bold mb-2">Categories</h1>
-      <p className="text-muted-foreground mb-8">Browse news by topic</p>
+      <div className="mb-8">
+        <h1 className="font-display text-3xl md:text-4xl font-black mb-2">Browse Topics 📖</h1>
+        <p className="text-muted-foreground font-medium">Find articles tailored to your parenting journey</p>
+      </div>
 
       {/* Category Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-10">
-        {CATEGORIES.map(({ value, label, icon: Icon, color }) => {
+        {CATEGORIES.map(({ value, label, emoji, color }) => {
           const count = articles.filter(a => a.category === value).length;
           const isActive = selected === value;
           return (
             <button
               key={value}
               onClick={() => setSelected(isActive ? null : value)}
-              className={`relative overflow-hidden rounded-xl p-5 text-left transition-all duration-200 border ${
-                isActive
-                  ? 'border-foreground/20 bg-secondary shadow-md'
-                  : 'border-border bg-card hover:border-foreground/10 hover:shadow-sm'
-              }`}
+              className={`relative overflow-hidden rounded-2xl p-5 text-left transition-all duration-200 border-2 ${
+                isActive ? 'ring-2 ring-accent ring-offset-2 scale-[1.02]' : 'hover:scale-[1.01]'
+              } ${color} bg-opacity-30`}
             >
-              <div className={`w-10 h-10 rounded-lg ${color} bg-opacity-10 flex items-center justify-center mb-3`}>
-                <Icon className={`w-5 h-5 ${color.replace('bg-', 'text-')}`} />
-              </div>
-              <h3 className="font-semibold text-sm">{label}</h3>
-              <p className="text-xs text-muted-foreground mt-1">{count} articles</p>
+              <div className="text-3xl mb-2">{emoji}</div>
+              <h3 className="font-display font-bold text-sm">{label}</h3>
+              <p className="text-xs opacity-70 mt-0.5 font-semibold">{count} articles</p>
             </button>
           );
         })}
@@ -63,9 +57,9 @@ export default function Categories() {
       {/* Results */}
       <div className="flex items-center justify-between mb-6">
         <h2 className="font-display text-xl font-bold">
-          {selected ? CATEGORIES.find(c => c.value === selected)?.label : 'All Articles'}
+          {selected ? `${CATEGORIES.find(c => c.value === selected)?.emoji} ${CATEGORIES.find(c => c.value === selected)?.label}` : 'All Articles'}
         </h2>
-        <span className="text-sm text-muted-foreground">{filtered.length} articles</span>
+        <span className="text-sm text-muted-foreground font-semibold">{filtered.length} articles</span>
       </div>
 
       {isLoading ? (
@@ -87,10 +81,10 @@ export default function Categories() {
           ))}
         </div>
       )}
-
       {!isLoading && filtered.length === 0 && (
         <div className="text-center py-16">
-          <p className="text-muted-foreground">No articles in this category yet.</p>
+          <p className="text-4xl mb-3">🔍</p>
+          <p className="text-muted-foreground font-semibold">No articles in this topic yet.</p>
         </div>
       )}
     </div>
