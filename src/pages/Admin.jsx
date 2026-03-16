@@ -94,6 +94,12 @@ export default function Admin() {
     toast.success('Deleted');
   };
 
+  const deletePodcast = async (id) => {
+    await base44.entities.Podcast.delete(id);
+    queryClient.invalidateQueries({ queryKey: ['admin-podcasts'] });
+    toast.success('Episode deleted');
+  };
+
   const totalViews = articles.reduce((sum, a) => sum + (a.views_count || 0), 0);
   const publishedCount = articles.filter(a => a.status === 'published').length;
 
