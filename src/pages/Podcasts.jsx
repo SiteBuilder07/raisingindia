@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Headphones, Play } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Link } from 'react-router-dom';
 
 export default function Podcasts() {
   const { data: podcasts = [], isLoading } = useQuery({
@@ -27,8 +28,9 @@ export default function Podcasts() {
         </div>
       ) : (
         <div className="space-y-4">
-          {podcasts.map((ep, i) => (
-            <div key={ep.id} className="bg-white border-2 border-border rounded-2xl p-5 flex gap-5 items-start hover:border-accent/30 hover:shadow-md transition-all">
+          {podcasts.map((ep) => (
+            <Link key={ep.id} to={`/PodcastEpisode?id=${ep.id}`} className="block">
+            <div className="bg-white border-2 border-border rounded-2xl p-5 flex gap-5 items-start hover:border-accent/30 hover:shadow-md transition-all group">
               <div className="w-16 h-16 rounded-xl overflow-hidden flex-none bg-accent/10 flex items-center justify-center">
                 {ep.cover_image ? (
                   <img src={ep.cover_image} alt={ep.title} className="w-full h-full object-cover" />
@@ -48,15 +50,14 @@ export default function Podcasts() {
                     <span className="text-xs text-muted-foreground font-bold">· {ep.duration}</span>
                   )}
                 </div>
-                <h3 className="font-display font-bold text-base leading-snug mb-1">{ep.title}</h3>
+                <h3 className="font-display font-bold text-base leading-snug mb-1 group-hover:text-accent transition-colors">{ep.title}</h3>
                 {ep.description && (
                   <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">{ep.description}</p>
                 )}
-                {ep.audio_url && (
-                  <audio controls src={ep.audio_url} className="mt-3 w-full h-8" />
-                )}
+                <span className="text-xs font-bold text-accent mt-2 block group-hover:underline">Listen now →</span>
               </div>
             </div>
+            </Link>
           ))}
           {podcasts.length === 0 && (
             <div className="text-center py-16">
