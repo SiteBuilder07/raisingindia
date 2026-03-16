@@ -43,6 +43,16 @@ export default function Admin() {
     queryFn: () => base44.entities.Comment.list('-created_date', 50),
   });
 
+  const { data: spotlightItems = [] } = useQuery({
+    queryKey: ['admin-spotlight'],
+    queryFn: () => base44.entities.SpotlightItem.list('-created_date', 50),
+  });
+
+  const { data: podcasts = [] } = useQuery({
+    queryKey: ['admin-podcasts'],
+    queryFn: () => base44.entities.Podcast.list('-published_date', 50),
+  });
+
   const deleteArticle = useMutation({
     mutationFn: (id) => base44.entities.Article.delete(id),
     onSuccess: () => {
