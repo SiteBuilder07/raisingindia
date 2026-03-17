@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, Headphones, Clock, Calendar } from 'lucide-react';
+import { ArrowLeft, Headphones, Clock, Calendar, Video } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 
@@ -88,27 +88,37 @@ export default function PodcastEpisode() {
           </div>
         </div>
 
+        {/* Video Player */}
+        {episode.video_url && (
+          <div className="px-6 md:px-8 pb-4">
+            <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3">🎬 Watch Now</p>
+            <video
+              controls
+              className="w-full rounded-2xl bg-black"
+              src={episode.video_url}
+            >
+              Your browser does not support the video element.
+            </video>
+          </div>
+        )}
+
         {/* Audio Player */}
         {episode.audio_url && (
           <div className="px-6 md:px-8 pb-8">
             <div className="bg-muted rounded-2xl p-4">
               <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3">🎧 Listen Now</p>
-              <audio
-                controls
-                className="w-full"
-                src={episode.audio_url}
-              >
+              <audio controls className="w-full" src={episode.audio_url}>
                 Your browser does not support the audio element.
               </audio>
             </div>
           </div>
         )}
 
-        {!episode.audio_url && (
+        {!episode.video_url && !episode.audio_url && (
           <div className="px-6 md:px-8 pb-8">
             <div className="bg-muted rounded-2xl p-6 text-center text-muted-foreground">
-              <Headphones className="w-8 h-8 mx-auto mb-2 opacity-40" />
-              <p className="font-semibold text-sm">Audio coming soon</p>
+              <Video className="w-8 h-8 mx-auto mb-2 opacity-40" />
+              <p className="font-semibold text-sm">Video coming soon</p>
             </div>
           </div>
         )}
