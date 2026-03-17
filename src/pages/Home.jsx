@@ -5,6 +5,7 @@ import FeaturedArticleSection from '@/components/home/FeaturedArticleSection';
 import LatestArticlesScroll from '@/components/home/LatestArticlesScroll';
 import SpotlightSection from '@/components/home/SpotlightSection';
 import PodcastSection from '@/components/home/PodcastSection';
+import WelcomeHero from '@/components/home/WelcomeHero';
 
 export default function Home() {
   const { data: articles = [], isLoading } = useQuery({
@@ -23,6 +24,7 @@ export default function Home() {
 
       {!isLoading && (
         <>
+          <WelcomeHero />
           <FeaturedArticleSection article={featuredArticle} sideArticles={sideArticles} />
           <LatestArticlesScroll articles={latestArticles} />
           <SpotlightSection recentArticles={articles.slice(0, 4)} />
