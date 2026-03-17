@@ -6,7 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
-import { Save, Upload } from 'lucide-react';
+import { Save, Upload, Video } from 'lucide-react';
 
 export default function PodcastEditor({ podcast, onSave, onCancel }) {
   const isEditing = !!podcast;
@@ -14,6 +14,7 @@ export default function PodcastEditor({ podcast, onSave, onCancel }) {
     title: podcast?.title || '',
     description: podcast?.description || '',
     audio_url: podcast?.audio_url || '',
+    video_url: podcast?.video_url || '',
     cover_image: podcast?.cover_image || '',
     episode_number: podcast?.episode_number || '',
     duration: podcast?.duration || '',
@@ -22,6 +23,7 @@ export default function PodcastEditor({ podcast, onSave, onCancel }) {
   });
   const [saving, setSaving] = useState(false);
   const [uploadingAudio, setUploadingAudio] = useState(false);
+  const [uploadingVideo, setUploadingVideo] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
 
   const handleChange = (field, value) => setForm(prev => ({ ...prev, [field]: value }));
@@ -34,6 +36,16 @@ export default function PodcastEditor({ podcast, onSave, onCancel }) {
     handleChange('audio_url', file_url);
     setUploadingAudio(false);
     toast.success('Audio uploaded!');
+  };
+
+  const handleVideoUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setUploadingVideo(true);
+    const { file_url } = await base44.integrations.Core.UploadFile({ file });
+    handleChange('video_url', file_url);
+    setUploadingVideo(false);
+    toast.success('Video uploaded!');
   };
 
   const handleImageUpload = async (e) => {
@@ -86,9 +98,29 @@ export default function PodcastEditor({ podcast, onSave, onCancel }) {
           <Input value={form.duration} onChange={e => handleChange('duration', e.target.value)} placeholder="e.g. 34:21" />
         </div>
 
+        {/* Video Upload */}
+        <div className="space-y-1 md:col-span-2">
+          <Label className="flex items-center gap-1"><Video className="w-4 h-4" /> Video File (MP4)</Label>
+          <div className="flex gap-2">
+            <Input value={form.video_url} onChange={e => handleChange('video_url', e.target.value)} placeholder="Paste video URL or upload..." className="flex-1" />
+            <label className="cursor-pointer">
+              <Button type="button" variant="outline" className="gap-2" disabled={uploadingVideo} asChild>
+                <span>
+                  <Upload className="w-4 h-4" />
+                  {uploadingVideo ? 'Uploading...' : 'Upload'}
+                </span>
+              </Button>
+              <input type="file" accept="video/*" className="hidden" onChange={handleVideoUpload} />
+            </label>
+          </div>
+          {form.video_url && (
+            <video controls src={form.video_url} className="w-full rounded-xl mt-2 max-h-48" />
+          )}
+        </div>
+
         {/* Audio Upload */}
         <div className="space-y-1 md:col-span-2">
-          <Label>Audio File (MP3)</Label>
+          <Label>Audio File (MP3) — optional</Label>
           <div className="flex gap-2">
             <Input value={form.audio_url} onChange={e => handleChange('audio_url', e.target.value)} placeholder="Paste URL or upload..." className="flex-1" />
             <label className="cursor-pointer">
