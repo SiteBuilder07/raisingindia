@@ -93,8 +93,8 @@ export default function PodcastSection({ featuredArticle }) {
           </div>
         ) : (
           <div className="bg-accent/5 border-2 border-accent/20 rounded-3xl p-8 flex flex-col items-center justify-center text-center">
-            <Headphones className="w-12 h-12 text-accent/30 mb-4" />
-            <p className="text-muted-foreground font-semibold">More podcast episodes coming soon!</p>
+            <Video className="w-12 h-12 text-accent/30 mb-4" />
+            <p className="text-muted-foreground font-semibold">More video episodes coming soon!</p>
             <Link to="/Categories" className="mt-4">
               <Button variant="outline" className="rounded-full font-bold gap-2">
                 Browse Articles <ArrowRight className="w-4 h-4" />
