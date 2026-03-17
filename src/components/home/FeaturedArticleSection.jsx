@@ -54,21 +54,21 @@ export default function FeaturedArticleSection({ article, sideArticles = [] }) {
         </div>
 
         {/* Side Stories */}
-        <div className="bg-yellow-400 rounded-3xl p-6 flex flex-col justify-between">
+        <div className="bg-violet-600 rounded-3xl p-6 flex flex-col justify-between">
           <div>
             <div className="flex items-center gap-2 mb-5">
-              <span className="text-xs font-black uppercase tracking-widest text-yellow-900 bg-yellow-300 px-3 py-1 rounded-full">
+              <span className="text-xs font-black uppercase tracking-widest text-violet-100 bg-violet-500 px-3 py-1 rounded-full">
                 📰 News You Can Use
               </span>
             </div>
             <div className="space-y-4">
               {sideArticles.slice(0, 3).map((a) => (
                 <Link key={a.id} to={`/Article?id=${a.id}`} className="block group">
-                  <h4 className="font-display font-black text-base leading-snug group-hover:underline text-yellow-950">
+                  <h4 className="font-display font-black text-base leading-snug group-hover:underline text-white">
                     {a.title}
                   </h4>
                   {a.summary && (
-                    <p className="text-yellow-800 text-xs mt-1 line-clamp-2 font-medium leading-relaxed">
+                    <p className="text-violet-200 text-xs mt-1 line-clamp-2 font-medium leading-relaxed">
                       {a.summary}
                     </p>
                   )}
@@ -77,7 +77,7 @@ export default function FeaturedArticleSection({ article, sideArticles = [] }) {
             </div>
           </div>
           <Link to="/Categories">
-            <button className="mt-6 w-full bg-yellow-950 text-white font-bold text-sm py-3 rounded-2xl hover:bg-yellow-800 transition-colors">
+            <button className="mt-6 w-full bg-white text-violet-700 font-bold text-sm py-3 rounded-2xl hover:bg-violet-50 transition-colors">
               Explore More Issues →
             </button>
           </Link>
