@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Headphones, Play } from 'lucide-react';
+import { Headphones, Play, Video } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Link } from 'react-router-dom';
 
@@ -54,7 +54,7 @@ export default function Podcasts() {
                 {ep.description && (
                   <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">{ep.description}</p>
                 )}
-                <span className="text-xs font-bold text-accent mt-2 block group-hover:underline">Listen now →</span>
+                <span className="text-xs font-bold text-accent mt-2 block group-hover:underline flex items-center gap-1"><Video className="w-3 h-3 inline" /> Watch now →</span>
               </div>
             </div>
             </Link>
