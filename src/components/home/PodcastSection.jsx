@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Play, Headphones, ArrowRight } from 'lucide-react';
+import { Play, Video, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
@@ -18,50 +18,47 @@ export default function PodcastSection({ featuredArticle }) {
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 py-8 pb-16">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Podcast Player */}
-        <div className="relative rounded-3xl overflow-hidden bg-gray-900 text-white p-8 flex flex-col justify-between min-h-[280px]">
-          {podcast?.cover_image && (
-            <div className="absolute inset-0">
-              <img src={podcast.cover_image} alt="" className="w-full h-full object-cover opacity-30" />
-              <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/80 to-gray-900/40" />
+        {/* Video Podcast Player */}
+        <div className="relative rounded-3xl overflow-hidden bg-gray-900 text-white flex flex-col min-h-[280px]">
+          {/* Video preview or cover */}
+          {podcast?.video_url ? (
+            <video
+              src={podcast.video_url}
+              className="w-full aspect-video object-cover"
+              muted
+              preload="metadata"
+            />
+          ) : podcast?.cover_image ? (
+            <div className="relative aspect-video overflow-hidden">
+              <img src={podcast.cover_image} alt="" className="w-full h-full object-cover" />
+              <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                <Video className="w-12 h-12 text-white/60" />
+              </div>
+            </div>
+          ) : (
+            <div className="aspect-video bg-gradient-to-br from-gray-800 to-gray-950 flex items-center justify-center">
+              <Video className="w-16 h-16 text-gray-600" />
             </div>
           )}
-          {!podcast?.cover_image && (
-            <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-950" />
-          )}
 
-          <div className="relative z-10">
-            <div className="flex items-center gap-2 mb-4">
-              <Headphones className="w-4 h-4 text-accent" />
-              <span className="text-xs font-black uppercase tracking-widest text-accent">New Episode</span>
+          <div className="p-6 flex flex-col flex-1 justify-between">
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <Video className="w-4 h-4 text-accent" />
+                <span className="text-xs font-black uppercase tracking-widest text-accent">Latest Video Episode</span>
+              </div>
+              <h3 className="font-display font-black text-xl leading-tight mb-1">
+                {podcast?.title || 'The Kids Voice Podcast'}
+              </h3>
+              {podcast?.episode_number && (
+                <p className="text-gray-400 text-xs font-bold">
+                  Episode {podcast.episode_number}{podcast.duration ? ` · ${podcast.duration}` : ''}
+                </p>
+              )}
             </div>
-            <h3 className="font-display font-black text-2xl leading-tight mb-2">
-              {podcast?.title || 'The Kids Voice Podcast'}
-            </h3>
-            {podcast?.episode_number && (
-              <p className="text-gray-400 text-xs font-bold mb-2">
-                Episode {podcast.episode_number}
-                {podcast.duration ? ` · ${podcast.duration}` : ''}
-              </p>
-            )}
-            {podcast?.description && (
-              <p className="text-gray-300 text-sm line-clamp-2 leading-relaxed">
-                {podcast.description}
-              </p>
-            )}
-          </div>
-
-          <div className="relative z-10 mt-6 flex items-center gap-4">
             {podcast && (
-              <Link to={`/PodcastEpisode?id=${podcast.id}`}>
-                <button className="w-14 h-14 rounded-full bg-accent flex items-center justify-center hover:bg-accent/90 transition-colors shadow-lg shadow-accent/30">
-                  <Play className="w-6 h-6 text-white fill-white ml-1" />
-                </button>
-              </Link>
-            )}
-            {podcast && (
-              <Link to={`/PodcastEpisode?id=${podcast.id}`} className="text-white/70 hover:text-white text-sm font-bold transition-colors">
-                Listen to this episode →
+              <Link to={`/PodcastEpisode?id=${podcast.id}`} className="mt-4 inline-flex items-center gap-2 bg-accent text-white font-bold text-sm px-5 py-2.5 rounded-full hover:bg-accent/90 transition-colors w-fit shadow-lg shadow-accent/30">
+                <Play className="w-4 h-4 fill-white" /> Watch Episode
               </Link>
             )}
           </div>
