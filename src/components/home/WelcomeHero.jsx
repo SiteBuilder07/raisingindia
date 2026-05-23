@@ -63,9 +63,9 @@ export default function WelcomeHero() {
         >
           <div className="aspect-[4/5] sm:aspect-[5/4] md:aspect-[4/5] rounded-3xl overflow-hidden shadow-xl">
             <img
-              src="https://media.base44.com/images/public/69b85e2627584283cc2dd222/212736bc2_happy-modern-indian-mother-lovingly-holding-and-smiling-at-her-baby-in-bright-cozy-home-setting-expressing-joy-parenting-and-family-bonding-photo.jpg"
+              src="https://media.base44.com/images/public/69b85e2627584283cc2dd222/aeb651ea6_generated_image.png"
               alt="Indian mother and child sharing a happy moment"
-              className="w-full h-full object-contain"
+              className="w-full h-full object-cover"
             />
           </div>
         </motion.div>
