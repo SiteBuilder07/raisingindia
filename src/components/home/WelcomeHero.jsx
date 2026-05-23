@@ -65,7 +65,7 @@ export default function WelcomeHero() {
             <img
               src="https://media.base44.com/images/public/69b85e2627584283cc2dd222/212736bc2_happy-modern-indian-mother-lovingly-holding-and-smiling-at-her-baby-in-bright-cozy-home-setting-expressing-joy-parenting-and-family-bonding-photo.jpg"
               alt="Indian mother and child sharing a happy moment"
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain"
             />
           </div>
         </motion.div>
