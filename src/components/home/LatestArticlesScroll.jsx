@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { getCategoryImage } from '@/lib/categoryImages';
 
 const CATEGORY_META = {
   newborn:    { emoji: '👶', color: 'text-pink-600' },
@@ -14,7 +15,7 @@ const CATEGORY_META = {
   parenting:  { emoji: '❤️', color: 'text-rose-600' },
 };
 
-export default function LatestArticlesScroll({ articles }) {
+export default function LatestArticlesScroll({ articles, totalCount }) {
   const scrollRef = useRef(null);
 
   const scroll = (dir) => {
@@ -55,7 +56,7 @@ export default function LatestArticlesScroll({ articles }) {
             to="/Categories"
             className="text-xs font-bold text-accent hover:underline ml-2 whitespace-nowrap"
           >
-            See all 50+ ideas →
+            See all {totalCount ?? articles.length} {(totalCount ?? articles.length) === 1 ? 'article' : 'articles'} →
           </Link>
         </div>
       </div>
@@ -75,17 +76,11 @@ export default function LatestArticlesScroll({ articles }) {
             >
               <div className="rounded-2xl overflow-hidden border-2 border-border bg-white hover:shadow-lg hover:border-accent/30 transition-all duration-300 hover:-translate-y-1">
                 <div className="aspect-square overflow-hidden bg-muted">
-                  {article.cover_image ? (
-                    <img
-                      src={article.cover_image}
-                      alt={article.title}
-                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-4xl bg-gradient-to-br from-accent/10 to-secondary">
-                      {meta.emoji}
-                    </div>
-                  )}
+                  <img
+                    src={article.cover_image || getCategoryImage(article.category)}
+                    alt={article.title}
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
                 </div>
                 <div className="p-3">
                   <span className={`text-xs font-black uppercase tracking-wide ${meta.color}`}>

@@ -30,10 +30,6 @@ export default function Admin() {
   const [editingSpotlight, setEditingSpotlight] = useState(null);
   const [showSpotlightEditor, setShowSpotlightEditor] = useState(false);
 
-  if (user?.role !== 'admin') {
-    return <Navigate to="/Home" replace />;
-  }
-
   const { data: articles = [] } = useQuery({
     queryKey: ['admin-articles'],
     queryFn: () => base44.entities.Article.list('-created_date', 100),
@@ -99,6 +95,11 @@ export default function Admin() {
     queryClient.invalidateQueries({ queryKey: ['admin-podcasts'] });
     toast.success('Episode deleted');
   };
+
+  // Admin gate — placed after all hooks to satisfy rules-of-hooks.
+  if (user?.role !== 'admin') {
+    return <Navigate to="/Home" replace />;
+  }
 
   const totalViews = articles.reduce((sum, a) => sum + (a.views_count || 0), 0);
   const publishedCount = articles.filter(a => a.status === 'published').length;

@@ -26,10 +26,10 @@ export default function SpotlightSection({ recentArticles = [] }) {
     <section className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Spotlight Card */}
-        <div className="bg-sky-50 border-2 border-sky-100 rounded-3xl p-6 flex flex-col">
+        <div className="bg-secondary border-2 border-border rounded-3xl p-6 flex flex-col">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <Sun className="w-5 h-5 text-yellow-500" />
+              <Sun className="w-5 h-5 text-accent" />
               <h3 className="font-display font-black text-lg">Spotlight</h3>
             </div>
             {spotlightItems.length > 1 && (
@@ -52,26 +52,28 @@ export default function SpotlightSection({ recentArticles = [] }) {
                     <img src={current.image_url} alt={current.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                   </div>
                 )}
-                <p className="font-display font-black text-center text-base group-hover:text-sky-600 transition-colors">"{current.title}"</p>
+                <p className="font-display font-black text-center text-base group-hover:text-accent transition-colors">"{current.title}"</p>
                 <p className="text-sm text-muted-foreground mt-1 font-semibold text-center">
                   By {current.author_name}
-                  {current.author_age ? `, Age ${current.author_age}` : ''}
+                  {current.author_age && current.author_age > 0 ? `, Age ${current.author_age}` : ''}
                   {current.author_city ? `, ${current.author_city}` : ''}
                 </p>
-                <span className="text-xs font-bold text-sky-500 mt-2 group-hover:underline">View Details →</span>
+                <span className="text-xs font-bold text-accent mt-2 group-hover:underline">View Details →</span>
               </Link>
             ) : (
-              <div className="text-center py-6">
-                <div className="text-6xl mb-3">🌟</div>
-                <p className="text-muted-foreground font-semibold text-sm">No spotlight items yet.</p>
-                <p className="text-xs text-muted-foreground mt-1">Be the first to submit!</p>
+              <div className="text-center py-8 px-2">
+                <div className="text-5xl mb-3">🌟</div>
+                <p className="font-display font-bold text-sm">No submissions yet</p>
+                <p className="text-xs text-muted-foreground mt-1 font-medium leading-relaxed">
+                  Be the first to share your child's work — drawings, stories, poems, projects.
+                </p>
               </div>
             )}
           </div>
 
           <Button
             onClick={() => setShowSubmit(true)}
-            className="mt-4 w-full bg-sky-500 hover:bg-sky-600 text-white font-bold rounded-2xl"
+            className="mt-4 w-full bg-accent hover:bg-accent/90 text-white font-bold rounded-2xl"
           >
             ✏️ Submit Your Work
           </Button>

@@ -5,11 +5,22 @@ import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, Headphones, Clock, Calendar, Video } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
+import { useState } from 'react';
+import CustomAudioPlayer from '@/components/common/CustomAudioPlayer';
+
+function formatDuration(seconds) {
+  if (!seconds || !Number.isFinite(seconds)) return null;
+  const m = Math.floor(seconds / 60);
+  const s = Math.floor(seconds % 60);
+  return `${m}:${s.toString().padStart(2, '0')}`;
+}
 
 export default function PodcastEpisode() {
   const params = new URLSearchParams(window.location.search);
   const id = params.get('id');
   const navigate = useNavigate();
+
+  const [actualDuration, setActualDuration] = useState(null);
 
   const { data: episode, isLoading } = useQuery({
     queryKey: ['podcast', id],
@@ -75,8 +86,10 @@ export default function PodcastEpisode() {
             </div>
             <h1 className="font-display text-2xl md:text-3xl font-black mb-2">{episode.title}</h1>
             <div className="flex items-center gap-4 text-sm text-muted-foreground font-semibold mb-3">
-              {episode.duration && (
-                <span className="flex items-center gap-1"><Clock className="w-4 h-4" /> {episode.duration}</span>
+              {(actualDuration || episode.duration) && (
+                <span className="flex items-center gap-1">
+                  <Clock className="w-4 h-4" /> {formatDuration(actualDuration) || episode.duration}
+                </span>
               )}
               {episode.published_date && (
                 <span className="flex items-center gap-1"><Calendar className="w-4 h-4" /> {format(new Date(episode.published_date), 'MMM d, yyyy')}</span>
@@ -102,15 +115,11 @@ export default function PodcastEpisode() {
           </div>
         )}
 
-        {/* Audio Player */}
+        {/* Audio Player — custom branded */}
         {episode.audio_url && (
           <div className="px-6 md:px-8 pb-8">
-            <div className="bg-muted rounded-2xl p-4">
-              <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3">🎧 Listen Now</p>
-              <audio controls className="w-full" src={episode.audio_url}>
-                Your browser does not support the audio element.
-              </audio>
-            </div>
+            <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3">🎧 Listen Now</p>
+            <CustomAudioPlayer src={episode.audio_url} onDurationLoaded={setActualDuration} />
           </div>
         )}
 

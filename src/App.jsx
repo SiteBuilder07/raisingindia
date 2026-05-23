@@ -16,6 +16,10 @@ import Podcasts from '@/pages/Podcasts';
 import Newsletter from '@/pages/Newsletter';
 import PodcastEpisode from '@/pages/PodcastEpisode';
 import SpotlightDetail from '@/pages/SpotlightDetail';
+import About from '@/pages/About';
+import Contact from '@/pages/Contact';
+import Privacy from '@/pages/Privacy';
+import Terms from '@/pages/Terms';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -55,6 +59,10 @@ const AuthenticatedApp = () => {
         <Route path="/Newsletter" element={<Newsletter />} />
         <Route path="/PodcastEpisode" element={<PodcastEpisode />} />
         <Route path="/SpotlightDetail" element={<SpotlightDetail />} />
+        <Route path="/About" element={<About />} />
+        <Route path="/Contact" element={<Contact />} />
+        <Route path="/Privacy" element={<Privacy />} />
+        <Route path="/Terms" element={<Terms />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>

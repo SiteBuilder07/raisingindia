@@ -4,6 +4,7 @@ import { Play, Video, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
+import AuthorAvatar from '@/components/common/AuthorAvatar';
 
 export default function PodcastSection({ featuredArticle }) {
   const [playing, setPlaying] = useState(false);
@@ -68,26 +69,28 @@ export default function PodcastSection({ featuredArticle }) {
         {featuredArticle ? (
           <div className="bg-white border-2 border-border rounded-3xl p-8 flex flex-col justify-between">
             <div>
-              <div className="flex items-center gap-2 mb-4">
+              <div className="flex items-center gap-2 mb-2">
                 <span className="text-xs font-black uppercase tracking-widest text-accent bg-accent/10 px-3 py-1 rounded-full">
                   🎙️ THE INTERVIEW
                 </span>
               </div>
-              <blockquote className="font-display text-2xl font-black leading-tight text-foreground mb-4">
+              <h3 className="font-display text-2xl font-black leading-tight mb-1">The Interview</h3>
+              <p className="text-sm text-muted-foreground font-medium mb-5">
+                Conversations with experts, educators, and parents.
+              </p>
+              <blockquote className="font-display text-xl font-black leading-snug text-foreground mb-4">
                 "{featuredArticle.summary?.slice(0, 80) || featuredArticle.title}"
               </blockquote>
               {featuredArticle.author_name && (
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center font-bold text-accent">
-                    {featuredArticle.author_name[0]}
-                  </div>
+                  <AuthorAvatar name={featuredArticle.author_name} src={featuredArticle.author_avatar} size="md" />
                   <p className="text-sm text-muted-foreground font-semibold">{featuredArticle.author_name}</p>
                 </div>
               )}
             </div>
             <Link to={`/Article?id=${featuredArticle.id}`}>
-              <Button className="bg-accent/10 text-accent hover:bg-accent hover:text-white font-bold rounded-full gap-2 transition-all">
-                Read the Interview <ArrowRight className="w-4 h-4" />
+              <Button className="bg-accent text-white hover:bg-accent/90 font-bold rounded-full gap-2 transition-all">
+                Read the full interview <ArrowRight className="w-4 h-4" />
               </Button>
             </Link>
           </div>

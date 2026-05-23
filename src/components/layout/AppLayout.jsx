@@ -1,8 +1,9 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { Home, Search, Bookmark, Grid3X3, PenSquare, Menu, X, Mail } from 'lucide-react';
+import { Home, Search, Bookmark, Grid3X3, PenSquare, Menu, X, Mail, Instagram, Facebook, Youtube } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { useAuth } from '@/lib/AuthContext';
+import NewsletterInlineForm from '@/components/common/NewsletterInlineForm';
 
 const NAV_ITEMS = [
   { path: '/Home', label: 'Home', icon: Home },
@@ -10,6 +11,19 @@ const NAV_ITEMS = [
   { path: '/Search', label: 'Search', icon: Search },
   { path: '/Bookmarks', label: 'Saved', icon: Bookmark },
 ];
+
+const FOOTER_TOPICS = [
+  { label: 'Newborn',    slug: 'newborn' },
+  { label: 'Toddler',    slug: 'toddler' },
+  { label: 'Education',  slug: 'education' },
+  { label: 'Health',     slug: 'health' },
+  { label: 'Activities', slug: 'activities' },
+  { label: 'Nutrition',  slug: 'nutrition' },
+  { label: 'Teen',       slug: 'teen' },
+  { label: 'Parenting',  slug: 'parenting' },
+];
+
+const LOGO_URL = 'https://media.base44.com/images/public/69b85e2627584283cc2dd222/43b92ad83_RaisingIndia-icon.svg';
 
 export default function AppLayout() {
   const { pathname } = useLocation();
@@ -25,9 +39,7 @@ export default function AppLayout() {
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <Link to="/Home" className="flex items-center gap-2">
-              <div className="w-9 h-9 bg-accent rounded-xl flex items-center justify-center shadow-md">
-                <span className="text-white font-display font-black text-base">R</span>
-              </div>
+              <img src={LOGO_URL} alt="" className="w-9 h-9 rounded-xl shadow-md" />
               <div className="hidden sm:block">
                 <span className="font-display text-xl font-black text-foreground">Raising</span>
                 <span className="font-display text-xl font-black text-accent">India</span>
@@ -128,43 +140,69 @@ export default function AppLayout() {
       {/* Footer */}
       <footer className="border-t border-border mt-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div>
+          <div className="grid grid-cols-2 md:grid-cols-12 gap-8">
+            {/* Brand */}
+            <div className="col-span-2 md:col-span-4">
               <Link to="/Home" className="flex items-center gap-2 mb-4">
-                <div className="w-9 h-9 bg-accent rounded-xl flex items-center justify-center shadow-md">
-                  <span className="text-white font-display font-black text-base">R</span>
-                </div>
+                <img src={LOGO_URL} alt="" className="w-9 h-9 rounded-xl shadow-md" />
                 <div>
                   <span className="font-display text-xl font-black text-foreground">Raising</span>
                   <span className="font-display text-xl font-black text-accent">India</span>
                 </div>
               </Link>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                Your go-to resource for parenting tips, child development insights, and education advice — raising happy, healthy kids together. 🌟
+              <p className="text-muted-foreground text-sm leading-relaxed mb-4">
+                Parenting tips, child development insights, and education advice — written for Indian families.
               </p>
+              <div className="flex items-center gap-2">
+                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="w-9 h-9 rounded-full bg-secondary hover:bg-accent hover:text-white text-foreground flex items-center justify-center transition-colors">
+                  <Instagram className="w-4 h-4" />
+                </a>
+                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="w-9 h-9 rounded-full bg-secondary hover:bg-accent hover:text-white text-foreground flex items-center justify-center transition-colors">
+                  <Facebook className="w-4 h-4" />
+                </a>
+                <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="w-9 h-9 rounded-full bg-secondary hover:bg-accent hover:text-white text-foreground flex items-center justify-center transition-colors">
+                  <Youtube className="w-4 h-4" />
+                </a>
+              </div>
             </div>
-            <div>
+
+            {/* Topics */}
+            <div className="col-span-1 md:col-span-3">
               <h4 className="font-display font-bold mb-3 text-sm uppercase tracking-wider">Topics</h4>
-              <div className="grid grid-cols-2 gap-2">
-                {['Newborn', 'Toddler', 'Education', 'Health', 'Activities', 'Nutrition'].map(cat => (
+              <div className="grid grid-cols-2 gap-y-2 gap-x-3">
+                {FOOTER_TOPICS.map(({ label, slug }) => (
                   <Link
-                    key={cat}
-                    to={`/Categories?cat=${cat.toLowerCase()}`}
+                    key={slug}
+                    to={`/Categories?cat=${slug}`}
                     className="text-sm text-muted-foreground hover:text-accent transition-colors font-medium"
                   >
-                    {cat}
+                    {label}
                   </Link>
                 ))}
               </div>
             </div>
-            <div>
-              <h4 className="font-display font-bold mb-3 text-sm uppercase tracking-wider">Quick Links</h4>
+
+            {/* Company */}
+            <div className="col-span-1 md:col-span-2">
+              <h4 className="font-display font-bold mb-3 text-sm uppercase tracking-wider">Company</h4>
               <div className="space-y-2">
-                <Link to="/Search" className="block text-sm text-muted-foreground hover:text-accent transition-colors font-medium">Search Articles</Link>
-                <Link to="/Bookmarks" className="block text-sm text-muted-foreground hover:text-accent transition-colors font-medium">Saved Articles</Link>
+                <Link to="/About"   className="block text-sm text-muted-foreground hover:text-accent transition-colors font-medium">About</Link>
+                <Link to="/Contact" className="block text-sm text-muted-foreground hover:text-accent transition-colors font-medium">Contact</Link>
+                <Link to="/Privacy" className="block text-sm text-muted-foreground hover:text-accent transition-colors font-medium">Privacy Policy</Link>
+                <Link to="/Terms"   className="block text-sm text-muted-foreground hover:text-accent transition-colors font-medium">Terms of Service</Link>
               </div>
             </div>
+
+            {/* Newsletter */}
+            <div className="col-span-2 md:col-span-3">
+              <h4 className="font-display font-bold mb-3 text-sm uppercase tracking-wider">Newsletter</h4>
+              <p className="text-xs text-muted-foreground font-medium leading-relaxed mb-3">
+                Weekly tips, expert advice and the best of RaisingIndia in your inbox.
+              </p>
+              <NewsletterInlineForm variant="plain" />
+            </div>
           </div>
+
           <div className="mt-10 pt-6 border-t border-border text-center text-xs text-muted-foreground">
             © {new Date().getFullYear()} RaisingIndia. Made with ❤️ for parents everywhere.
           </div>

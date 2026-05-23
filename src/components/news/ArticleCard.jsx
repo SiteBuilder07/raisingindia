@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom';
 import { Clock, Eye } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
+import AuthorAvatar from '@/components/common/AuthorAvatar';
+import { getCategoryImage } from '@/lib/categoryImages';
 
 const CATEGORY_META = {
   newborn:   { emoji: '👶', color: 'bg-pink-100 text-pink-700 border-pink-200' },
@@ -24,17 +26,11 @@ export default function ArticleCard({ article, variant = 'default' }) {
 
         {/* Image */}
         <div className={`relative overflow-hidden ${isFeatured ? 'aspect-[16/10] md:aspect-auto' : 'aspect-[16/10]'}`}>
-          {article.cover_image ? (
-            <img
-              src={article.cover_image}
-              alt={article.title}
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-            />
-          ) : (
-            <div className="w-full h-full bg-gradient-to-br from-accent/20 to-secondary flex items-center justify-center">
-              <span className="text-6xl">{meta.emoji}</span>
-            </div>
-          )}
+          <img
+            src={article.cover_image || getCategoryImage(article.category)}
+            alt={article.title}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
           {article.is_breaking && (
             <div className="absolute top-3 left-3">
               <Badge className="bg-red-500 text-white border-0 text-xs font-bold animate-pulse rounded-full px-3">
@@ -68,12 +64,15 @@ export default function ArticleCard({ article, variant = 'default' }) {
           )}
 
           <div className="mt-auto flex items-center justify-between text-xs text-muted-foreground">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 min-w-0">
               {article.author_name && (
-                <span className="font-bold text-foreground">{article.author_name}</span>
+                <>
+                  <AuthorAvatar name={article.author_name} src={article.author_avatar} size="xs" />
+                  <span className="font-bold text-foreground truncate">{article.author_name}</span>
+                </>
               )}
               {article.reading_time_minutes && (
-                <span className="flex items-center gap-1 font-semibold">
+                <span className="flex items-center gap-1 font-semibold whitespace-nowrap">
                   <Clock className="w-3 h-3" />
                   {article.reading_time_minutes} min
                 </span>

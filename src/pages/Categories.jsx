@@ -48,7 +48,7 @@ export default function Categories() {
             >
               <div className="text-3xl mb-2">{emoji}</div>
               <h3 className="font-display font-bold text-sm">{label}</h3>
-              <p className="text-xs opacity-70 mt-0.5 font-semibold">{count} articles</p>
+              <p className="text-xs opacity-70 mt-0.5 font-semibold">{count} {count === 1 ? 'article' : 'articles'}</p>
             </button>
           );
         })}
@@ -59,7 +59,7 @@ export default function Categories() {
         <h2 className="font-display text-xl font-bold">
           {selected ? `${CATEGORIES.find(c => c.value === selected)?.emoji} ${CATEGORIES.find(c => c.value === selected)?.label}` : 'All Articles'}
         </h2>
-        <span className="text-sm text-muted-foreground font-semibold">{filtered.length} articles</span>
+        <span className="text-sm text-muted-foreground font-semibold">{filtered.length} {filtered.length === 1 ? 'article' : 'articles'}</span>
       </div>
 
       {isLoading ? (

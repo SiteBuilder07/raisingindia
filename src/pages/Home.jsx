@@ -26,7 +26,7 @@ export default function Home() {
         <>
           <WelcomeHero />
           <FeaturedArticleSection article={featuredArticle} sideArticles={sideArticles} />
-          <LatestArticlesScroll articles={latestArticles} />
+          <LatestArticlesScroll articles={latestArticles} totalCount={articles.length} />
           <SpotlightSection recentArticles={articles.slice(0, 4)} />
           <PodcastSection featuredArticle={featuredArticle} />
         </>

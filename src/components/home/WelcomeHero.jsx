@@ -1,3 +1,7 @@
+/**
+ * Homepage welcome hero — single warm photograph of an Indian parent and child
+ * on the soft cream background. No geometric colour blocks.
+ */
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Sparkles, ArrowRight } from 'lucide-react';
@@ -5,12 +9,9 @@ import { Sparkles, ArrowRight } from 'lucide-react';
 export default function WelcomeHero() {
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
-      <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-background via-secondary to-orange-50 border-2 border-border px-8 py-10 flex flex-col sm:flex-row items-center justify-between gap-6">
-        {/* Decorative blobs */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-accent/10 rounded-full -translate-y-1/2 translate-x-1/4 blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-violet-300/20 rounded-full translate-y-1/2 -translate-x-1/4 blur-3xl pointer-events-none" />
-
-        <div className="relative z-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
+        {/* Text */}
+        <div>
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -25,7 +26,7 @@ export default function WelcomeHero() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="font-display text-4xl md:text-5xl font-black leading-tight mb-3"
+            className="font-display text-4xl md:text-5xl lg:text-6xl font-black leading-tight mb-4"
           >
             <span className="text-foreground">Raising</span>
             <span className="text-accent">India</span>
@@ -35,23 +36,38 @@ export default function WelcomeHero() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-muted-foreground text-base font-medium max-w-sm"
+            className="text-muted-foreground text-base md:text-lg font-medium max-w-md mb-6 leading-relaxed"
           >
-            Expert parenting tips, child development insights &amp; education advice — all in one place. 🧡
+            Expert parenting tips, child development insights &amp; education advice — written for Indian families. 🧡
           </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+          >
+            <Link to="/Categories">
+              <button className="inline-flex items-center gap-2 bg-accent text-white font-bold text-sm px-6 py-3 rounded-full shadow-lg shadow-accent/30 hover:bg-accent/90 hover:gap-3 transition-all duration-200">
+                Explore Topics <ArrowRight className="w-4 h-4" />
+              </button>
+            </Link>
+          </motion.div>
         </div>
 
+        {/* Photo */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
+          initial={{ opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.4, delay: 0.3 }}
-          className="relative z-10 shrink-0"
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="relative"
         >
-          <Link to="/Categories">
-            <button className="flex items-center gap-2 bg-accent text-white font-bold text-sm px-6 py-3 rounded-full shadow-lg shadow-accent/30 hover:bg-accent/90 hover:shadow-accent/40 hover:gap-3 transition-all duration-200">
-              Explore Topics <ArrowRight className="w-4 h-4" />
-            </button>
-          </Link>
+          <div className="aspect-[4/5] sm:aspect-[5/4] md:aspect-[4/5] rounded-3xl overflow-hidden shadow-xl">
+            <img
+              src="https://images.unsplash.com/photo-1607582544161-7e8be4b6e60c?auto=format&fit=crop&w=900&q=80"
+              alt="Indian mother and child sharing a happy moment"
+              className="w-full h-full object-cover"
+            />
+          </div>
         </motion.div>
       </div>
     </section>

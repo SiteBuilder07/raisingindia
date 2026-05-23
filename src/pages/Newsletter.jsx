@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
 import { CheckCircle2, Mail, Star, Heart, BookOpen, Mic } from 'lucide-react';
+import NewsletterInlineForm from '@/components/common/NewsletterInlineForm';
 
 export default function Newsletter() {
   const [email, setEmail] = useState('');
@@ -31,9 +32,12 @@ export default function Newsletter() {
           <h1 className="font-display text-4xl md:text-5xl font-black text-white mb-4">
             Join the RaisingIndia Family!
           </h1>
-          <p className="text-white/85 text-lg font-semibold leading-relaxed max-w-xl mx-auto">
+          <p className="text-white/85 text-lg font-semibold leading-relaxed max-w-xl mx-auto mb-7">
             Get weekly parenting tips, expert advice, fun activity ideas, and the latest from our community delivered straight to your inbox.
           </p>
+          <div className="max-w-md mx-auto">
+            <NewsletterInlineForm variant="on-orange" />
+          </div>
         </div>
       </div>
 
