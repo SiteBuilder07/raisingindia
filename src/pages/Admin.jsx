@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, lazy, Suspense } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
@@ -7,7 +7,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Plus, FileText, Eye, BarChart3, Users } from 'lucide-react';
 import { Navigate } from 'react-router-dom';
-import ArticleEditor from '@/components/admin/ArticleEditor';
+const ArticleEditor = lazy(() => import('@/components/admin/ArticleEditor'));
 import AdminArticlesTab from '@/components/admin/AdminArticlesTab';
 import AdminSpotlightTab from '@/components/admin/AdminSpotlightTab';
 import AdminPodcastsTab from '@/components/admin/AdminPodcastsTab';
@@ -61,7 +61,9 @@ export default function Admin() {
         <Button variant="ghost" onClick={() => setShowEditor(false)} className="mb-4">
           ← Back to Dashboard
         </Button>
-        <ArticleEditor article={editingArticle} onSave={handleSaved} />
+        <Suspense fallback={<div className="py-12 text-center text-muted-foreground">Loading editor…</div>}>
+          <ArticleEditor article={editingArticle} onSave={handleSaved} />
+        </Suspense>
       </div>
     );
   }
