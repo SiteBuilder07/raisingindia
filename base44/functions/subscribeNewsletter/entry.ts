@@ -31,6 +31,8 @@ export default async function (req: Request): Promise<Response> {
     await base44.asServiceRole.entities.NewsletterSubscriber.create({ email, name, is_active: true });
     return Response.json({ ok: true, already_subscribed: false });
   } catch (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    // Log internals server-side only; callers get a generic message.
+    console.error('subscribeNewsletter failed:', error);
+    return Response.json({ error: 'Something went wrong. Please try again.' }, { status: 500 });
   }
 }

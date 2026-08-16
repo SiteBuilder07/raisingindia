@@ -34,6 +34,8 @@ export default async function (req: Request): Promise<Response> {
       headers: { 'Content-Type': 'application/xml; charset=utf-8' },
     });
   } catch (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    // Log internals server-side only; callers get a generic message.
+    console.error('sitemap failed:', error);
+    return Response.json({ error: 'Something went wrong. Please try again.' }, { status: 500 });
   }
 }

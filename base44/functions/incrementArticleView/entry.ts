@@ -23,6 +23,8 @@ export default async function (req: Request): Promise<Response> {
 
     return Response.json({ ok: true });
   } catch (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    // Log internals server-side only; callers get a generic message.
+    console.error('incrementArticleView failed:', error);
+    return Response.json({ error: 'Something went wrong. Please try again.' }, { status: 500 });
   }
 }
