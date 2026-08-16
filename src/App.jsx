@@ -1,4 +1,5 @@
 import { Toaster } from "@/components/ui/toaster"
+import { Toaster as SonnerToaster } from "@/components/ui/sonner"
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
@@ -52,6 +53,7 @@ const AuthenticatedApp = () => {
       <Route element={<AppLayout />}>
         <Route path="/Home" element={<Home />} />
         <Route path="/Article" element={<Article />} />
+        <Route path="/article/:slug" element={<Article />} />
         <Route path="/Categories" element={<Categories />} />
         <Route path="/Search" element={<Search />} />
         <Route path="/Bookmarks" element={<Bookmarks />} />
@@ -81,6 +83,7 @@ function App() {
             <AuthenticatedApp />
           </Router>
           <Toaster />
+          <SonnerToaster position="bottom-right" richColors />
         </QueryClientProvider>
       </AuthProvider>
     </ErrorBoundary>

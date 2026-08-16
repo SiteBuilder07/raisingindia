@@ -14,10 +14,14 @@ export default function NewsletterSignup() {
     e.preventDefault();
     if (!email) return;
     setLoading(true);
-    await base44.entities.NewsletterSubscriber.create({ email, is_active: true });
+    try {
+      await base44.functions.invoke('subscribeNewsletter', { email });
+      setSubmitted(true);
+      toast.success('Welcome to the RaisingIndia family! 🎉');
+    } catch {
+      toast.error('Something went wrong. Please try again.');
+    }
     setLoading(false);
-    setSubmitted(true);
-    toast.success('Welcome to the RaisingIndia family! 🎉');
   };
 
   return (

@@ -7,7 +7,8 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Clock, Eye, Bookmark, BookmarkCheck, Share2, ArrowLeft } from 'lucide-react';
 import { format } from 'date-fns';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
+import { setPageMeta, resetPageMeta } from '@/lib/seo';
 import { toast } from 'sonner';
 import CommentSection from '@/components/news/CommentSection';
 import NewsletterSignup from '@/components/news/NewsletterSignup';
@@ -16,17 +17,26 @@ import { getCategoryImage } from '@/lib/categoryImages';
 import { getCategoryMeta } from '@/lib/categories';
 
 export default function Article() {
+  const { slug } = useParams();
   const urlParams = new URLSearchParams(window.location.search);
-  const articleId = urlParams.get('id');
+  const idParam = urlParams.get('id');
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [viewCounted, setViewCounted] = useState(false);
 
   const { data: article, isLoading } = useQuery({
-    queryKey: ['article', articleId],
-    queryFn: () => base44.entities.Article.get(articleId),
-    enabled: !!articleId,
+    queryKey: ['article', slug || idParam],
+    queryFn: async () => {
+      if (slug) {
+        const matches = await base44.entities.Article.filter({ slug }, '-published_date', 1);
+        return matches[0] || null;
+      }
+      return base44.entities.Article.get(idParam);
+    },
+    enabled: !!(slug || idParam),
   });
+
+  const articleId = article?.id || idParam;
 
   const { data: bookmarks = [] } = useQuery({
     queryKey: ['bookmarks', user?.email],
@@ -52,22 +62,24 @@ export default function Article() {
     },
   });
 
-  // Count view — atomic increment avoids lost updates when multiple readers hit the same article
+  // Count view — done server-side, since readers can't write to articles
   useEffect(() => {
     if (articleId && !viewCounted) {
-      base44.entities.Article.updateMany({ id: articleId }, { $inc: { views_count: 1 } });
+      base44.functions.invoke('incrementArticleView', { articleId });
       setViewCounted(true);
     }
   }, [articleId, viewCounted]);
 
-  // SEO — update page title and meta description
+  // SEO — title, description and social preview tags
   useEffect(() => {
     if (article?.title) {
-      document.title = `${article.title} | RaisingIndia`;
-      const metaDesc = document.querySelector('meta[name="description"]');
-      if (article.summary && metaDesc) metaDesc.setAttribute('content', article.summary);
+      setPageMeta({
+        title: article.title,
+        description: article.summary,
+        image: article.cover_image,
+      });
     }
-    return () => { document.title = 'RaisingIndia'; };
+    return resetPageMeta;
   }, [article]);
 
   const handleShare = async () => {

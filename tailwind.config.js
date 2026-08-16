@@ -1,4 +1,5 @@
 import tailwindcssAnimate from "tailwindcss-animate";
+import tailwindcssTypography from "@tailwindcss/typography";
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -102,5 +103,5 @@ export default {
     'text-rose-600', 'text-cyan-600', 'text-pink-600', 'text-amber-600',
     'bg-opacity-10',
   ],
-  plugins: [tailwindcssAnimate],
+  plugins: [tailwindcssAnimate, tailwindcssTypography],
 }

@@ -18,14 +18,7 @@ export default function NewsletterInlineForm({ variant = 'on-orange' }) {
     if (!email) return;
     setLoading(true);
     try {
-      const existing = await base44.entities.NewsletterSubscriber.filter({ email });
-      if (existing.length > 0) {
-        if (!existing[0].is_active) {
-          await base44.entities.NewsletterSubscriber.update(existing[0].id, { is_active: true });
-        }
-      } else {
-        await base44.entities.NewsletterSubscriber.create({ email, is_active: true });
-      }
+      await base44.functions.invoke('subscribeNewsletter', { email });
       setSubmitted(true);
       toast.success('Welcome to the RaisingIndia family! 🎉');
       base44.analytics.track({ eventName: 'newsletter_subscribe', properties: { source: 'inline_form' } });

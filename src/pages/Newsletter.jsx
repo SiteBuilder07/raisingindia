@@ -17,14 +17,7 @@ export default function Newsletter() {
     if (!email) return;
     setLoading(true);
     try {
-      const existing = await base44.entities.NewsletterSubscriber.filter({ email });
-      if (existing.length > 0) {
-        if (!existing[0].is_active) {
-          await base44.entities.NewsletterSubscriber.update(existing[0].id, { is_active: true, name: name || existing[0].name });
-        }
-      } else {
-        await base44.entities.NewsletterSubscriber.create({ email, name, is_active: true });
-      }
+      await base44.functions.invoke('subscribeNewsletter', { email, name });
       setSubmitted(true);
       toast.success('Welcome to the RaisingIndia family! 🎉');
       base44.analytics.track({ eventName: 'newsletter_subscribe', properties: { source: 'newsletter_page' } });

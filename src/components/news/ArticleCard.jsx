@@ -5,13 +5,14 @@ import { format } from 'date-fns';
 import AuthorAvatar from '@/components/common/AuthorAvatar';
 import { getCategoryImage } from '@/lib/categoryImages';
 import { getCategoryMeta } from '@/lib/categories';
+import { articleUrl } from '@/lib/articleUrl';
 
 export default function ArticleCard({ article, variant = 'default' }) {
   const isFeatured = variant === 'featured';
   const meta = getCategoryMeta(article.category);
 
   return (
-    <Link to={`/Article?id=${article.id}`} className={`group block ${isFeatured ? '' : 'h-full'}`}>
+    <Link to={articleUrl(article)} className={`group block ${isFeatured ? '' : 'h-full'}`}>
       <article className={`h-full overflow-hidden rounded-2xl border-2 border-border bg-white transition-all duration-300 hover:shadow-xl hover:shadow-accent/10 hover:-translate-y-1 hover:border-accent/30 ${isFeatured ? 'md:grid md:grid-cols-2' : 'flex flex-col'}`}>
 
         {/* Image */}

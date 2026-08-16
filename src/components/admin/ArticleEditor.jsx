@@ -9,7 +9,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
 import { Save, Send } from 'lucide-react';
-import ReactQuill from 'react-quill';
+import ReactQuill from 'react-quill-new';
+import 'react-quill-new/dist/quill.snow.css';
 
 import { CATEGORY_VALUES, CATEGORY_MAP } from '@/lib/categories';
 

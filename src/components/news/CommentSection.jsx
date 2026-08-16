@@ -22,17 +22,29 @@ export default function CommentSection({ articleId }) {
 
   const { data: comments = [] } = useQuery({
     queryKey: ['comments', articleId],
-    queryFn: () => base44.entities.Comment.filter({ article_id: articleId, is_approved: true }, '-created_date'),
+    // Served by a backend function so commenter emails are never exposed publicly.
+    queryFn: async () => {
+      const res = await base44.functions.invoke('listComments', { articleId });
+      return res.data?.comments || [];
+    },
+    enabled: !!articleId,
   });
 
   const addComment = useMutation({
-    mutationFn: (data) => base44.entities.Comment.create(data),
-    onSuccess: (_data, vars) => {
+    // Approval and rate limiting are decided server-side, not in the browser.
+    mutationFn: async (data) => {
+      const res = await base44.functions.invoke('postComment', data);
+      return res.data;
+    },
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['comments', articleId] });
       setContent('');
       if (!user) { setName(''); setEmail(''); }
-      toast.success(vars.is_approved ? 'Comment posted!' : 'Thanks! Your comment is awaiting moderation.');
+      toast.success(data?.is_approved ? 'Comment posted!' : 'Thanks! Your comment is awaiting moderation.');
       base44.analytics.track({ eventName: 'comment_post', properties: { article_id: articleId, is_registered: !!user } });
+    },
+    onError: (err) => {
+      toast.error(err?.response?.data?.error || 'Could not post your comment. Please try again.');
     },
   });
 
@@ -75,11 +87,10 @@ export default function CommentSection({ articleId }) {
     }
 
     addComment.mutate({
-      article_id: articleId,
+      articleId,
       content: trimmedContent,
-      author_name: authorName,
-      author_email: authorEmail,
-      is_approved: !!user, // moderate anonymous comments; auto-approve signed-in
+      authorName,
+      authorEmail,
     });
   };
 
