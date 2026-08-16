@@ -1,0 +1,46 @@
+{
+  "name": "Podcast",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Episode title"
+    },
+    "description": {
+      "type": "string",
+      "description": "Episode description"
+    },
+    "audio_url": {
+      "type": "string",
+      "description": "Audio file URL or embed URL"
+    },
+    "video_url": {
+      "type": "string",
+      "description": "Video file URL (MP4 or embed)"
+    },
+    "cover_image": {
+      "type": "string",
+      "description": "Cover art URL"
+    },
+    "episode_number": {
+      "type": "number",
+      "description": "Episode number"
+    },
+    "duration": {
+      "type": "string",
+      "description": "Duration e.g. 34:21"
+    },
+    "is_latest": {
+      "type": "boolean",
+      "default": false,
+      "description": "Mark as latest episode"
+    },
+    "published_date": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "title"
+  ]
+}

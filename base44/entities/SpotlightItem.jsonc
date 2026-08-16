@@ -1,0 +1,48 @@
+{
+  "name": "SpotlightItem",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Title of the submission"
+    },
+    "author_name": {
+      "type": "string",
+      "description": "Creator name"
+    },
+    "author_age": {
+      "type": "number",
+      "description": "Creator age (if child)"
+    },
+    "author_city": {
+      "type": "string",
+      "description": "Creator city"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Image of the submission"
+    },
+    "description": {
+      "type": "string",
+      "description": "Short description"
+    },
+    "is_featured": {
+      "type": "boolean",
+      "default": false,
+      "description": "Show in spotlight section"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected"
+      ],
+      "default": "pending"
+    }
+  },
+  "required": [
+    "title",
+    "author_name"
+  ]
+}

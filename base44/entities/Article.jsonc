@@ -1,0 +1,93 @@
+{
+  "name": "Article",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Article headline"
+    },
+    "slug": {
+      "type": "string",
+      "description": "URL-friendly slug"
+    },
+    "summary": {
+      "type": "string",
+      "description": "Short summary/excerpt"
+    },
+    "content": {
+      "type": "string",
+      "description": "Full article content in HTML"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "newborn",
+        "toddler",
+        "education",
+        "health",
+        "activities",
+        "nutrition",
+        "teen",
+        "parenting"
+      ],
+      "description": "Article category"
+    },
+    "cover_image": {
+      "type": "string",
+      "description": "Cover image URL"
+    },
+    "author_name": {
+      "type": "string",
+      "description": "Author display name"
+    },
+    "author_avatar": {
+      "type": "string",
+      "description": "Author avatar URL"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "published",
+        "archived"
+      ],
+      "default": "draft",
+      "description": "Publication status"
+    },
+    "is_featured": {
+      "type": "boolean",
+      "default": false,
+      "description": "Featured on homepage"
+    },
+    "is_breaking": {
+      "type": "boolean",
+      "default": false,
+      "description": "Breaking/urgent news"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Article tags"
+    },
+    "reading_time_minutes": {
+      "type": "number",
+      "description": "Estimated reading time"
+    },
+    "views_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of views"
+    },
+    "published_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When published"
+    }
+  },
+  "required": [
+    "title",
+    "category"
+  ]
+}

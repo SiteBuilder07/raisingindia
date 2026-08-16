@@ -1,0 +1,31 @@
+{
+  "name": "Comment",
+  "type": "object",
+  "properties": {
+    "article_id": {
+      "type": "string",
+      "description": "ID of the article"
+    },
+    "author_name": {
+      "type": "string",
+      "description": "Commenter name"
+    },
+    "author_email": {
+      "type": "string",
+      "description": "Commenter email"
+    },
+    "content": {
+      "type": "string",
+      "description": "Comment text"
+    },
+    "is_approved": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether comment is approved"
+    }
+  },
+  "required": [
+    "article_id",
+    "content"
+  ]
+}

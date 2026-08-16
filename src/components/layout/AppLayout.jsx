@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { useAuth } from '@/lib/AuthContext';
 import NewsletterInlineForm from '@/components/common/NewsletterInlineForm';
+import BrandMark from '@/components/common/BrandMark';
 
 const NAV_ITEMS = [
   { path: '/Home', label: 'Home', icon: Home },
@@ -23,8 +24,6 @@ const FOOTER_TOPICS = [
   { label: 'Parenting',  slug: 'parenting' },
 ];
 
-const LOGO_URL = 'https://media.base44.com/images/public/69b85e2627584283cc2dd222/43b92ad83_RaisingIndia-icon.svg';
-
 export default function AppLayout() {
   const { pathname } = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -39,7 +38,7 @@ export default function AppLayout() {
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <Link to="/Home" className="flex items-center gap-2">
-              <img src={LOGO_URL} alt="" className="w-9 h-9 rounded-xl shadow-md" />
+              <BrandMark />
               <div className="hidden sm:block">
                 <span className="font-display text-xl font-black text-foreground">Raising</span>
                 <span className="font-display text-xl font-black text-accent">India</span>
@@ -144,7 +143,7 @@ export default function AppLayout() {
             {/* Brand */}
             <div className="col-span-2 md:col-span-4">
               <Link to="/Home" className="flex items-center gap-2 mb-4">
-                <img src={LOGO_URL} alt="" className="w-9 h-9 rounded-xl shadow-md" />
+                <BrandMark />
                 <div>
                   <span className="font-display text-xl font-black text-foreground">Raising</span>
                   <span className="font-display text-xl font-black text-accent">India</span>
