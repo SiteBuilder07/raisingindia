@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { format } from 'date-fns';
+import { articleUrl } from '@/lib/articleUrl';
 
 export default function TrendingSidebar({ articles }) {
   if (!articles || articles.length === 0) return null;
@@ -14,7 +15,7 @@ export default function TrendingSidebar({ articles }) {
         {articles.map((article, i) => (
           <Link
             key={article.id}
-            to={`/Article?id=${article.id}`}
+            to={articleUrl(article)}
             className="group flex gap-4 items-start"
           >
             <span className="text-2xl font-display font-black text-accent/30 group-hover:text-accent transition-colors leading-none mt-0.5">

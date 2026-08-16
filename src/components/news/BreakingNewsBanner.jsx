@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Zap } from 'lucide-react';
+import { articleUrl } from '@/lib/articleUrl';
 
 export default function BreakingNewsBanner({ articles }) {
   if (!articles || articles.length === 0) return null;
@@ -14,7 +15,7 @@ export default function BreakingNewsBanner({ articles }) {
         <div className="overflow-hidden">
           <div className="flex gap-8 animate-marquee whitespace-nowrap">
             {articles.map((a) => (
-              <Link key={a.id} to={`/Article?id=${a.id}`} className="text-sm hover:underline">
+              <Link key={a.id} to={articleUrl(a)} className="text-sm hover:underline">
                 {a.title}
               </Link>
             ))}

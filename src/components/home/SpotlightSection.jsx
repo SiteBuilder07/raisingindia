@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight, Sun } from 'lucide-react';
 import SpotlightSubmitModal from './SpotlightSubmitModal';
 import { Link } from 'react-router-dom';
+import { articleUrl } from '@/lib/articleUrl';
 
 export default function SpotlightSection({ recentArticles = [] }) {
   const [spotlightIndex, setSpotlightIndex] = useState(0);
@@ -86,7 +87,7 @@ export default function SpotlightSection({ recentArticles = [] }) {
             <h3 className="font-display font-black text-lg">From the Blog</h3>
           </div>
           {blogArticles.map((article) => (
-            <Link key={article.id} to={`/Article?id=${article.id}`} className="group flex gap-4 bg-white border-2 border-border rounded-2xl p-4 hover:border-accent/30 hover:shadow-md transition-all">
+            <Link key={article.id} to={articleUrl(article)} className="group flex gap-4 bg-white border-2 border-border rounded-2xl p-4 hover:border-accent/30 hover:shadow-md transition-all">
               {article.cover_image && (
                 <div className="w-24 h-20 rounded-xl overflow-hidden flex-none">
                   <img src={article.cover_image} alt={article.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />

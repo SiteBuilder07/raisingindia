@@ -4,6 +4,7 @@ import { Play, Video, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import AuthorAvatar from '@/components/common/AuthorAvatar';
+import { articleUrl } from '@/lib/articleUrl';
 
 export default function PodcastSection({ featuredArticle }) {
   const { data: podcasts = [] } = useQuery({
@@ -80,7 +81,7 @@ export default function PodcastSection({ featuredArticle }) {
                 </div>
               )}
             </div>
-            <Link to={`/Article?id=${featuredArticle.id}`}>
+            <Link to={articleUrl(featuredArticle)}>
               <Button className="bg-accent text-white hover:bg-accent/90 font-bold rounded-full gap-2 transition-all">
                 Read the full interview <ArrowRight className="w-4 h-4" />
               </Button>

@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { getCategoryImage } from '@/lib/categoryImages';
 import { getCategoryMeta } from '@/lib/categories';
+import { articleUrl } from '@/lib/articleUrl';
 
 export default function LatestArticlesScroll({ articles, totalCount }) {
   const scrollRef = useRef(null);
@@ -61,7 +62,7 @@ export default function LatestArticlesScroll({ articles, totalCount }) {
           return (
             <Link
               key={article.id}
-              to={`/Article?id=${article.id}`}
+              to={articleUrl(article)}
               className="group flex-none w-52"
             >
               <div className="rounded-2xl overflow-hidden border-2 border-border bg-white hover:shadow-lg hover:border-accent/30 transition-all duration-300 hover:-translate-y-1">

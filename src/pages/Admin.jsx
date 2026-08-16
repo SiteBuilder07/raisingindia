@@ -13,6 +13,7 @@ import AdminSpotlightTab from '@/components/admin/AdminSpotlightTab';
 import AdminPodcastsTab from '@/components/admin/AdminPodcastsTab';
 import AdminCommentsTab from '@/components/admin/AdminCommentsTab';
 import AdminSubscribersTab from '@/components/admin/AdminSubscribersTab';
+import AdminInsightsTab from '@/components/admin/AdminInsightsTab';
 
 export default function Admin() {
   const { user } = useAuth();
@@ -109,6 +110,7 @@ export default function Admin() {
           <TabsTrigger value="podcasts">Podcasts</TabsTrigger>
           <TabsTrigger value="comments">Comments</TabsTrigger>
           <TabsTrigger value="subscribers">Subscribers</TabsTrigger>
+          <TabsTrigger value="insights">Insights</TabsTrigger>
         </TabsList>
 
         <TabsContent value="articles" className="mt-6">
@@ -125,6 +127,9 @@ export default function Admin() {
         </TabsContent>
         <TabsContent value="subscribers" className="mt-6">
           <AdminSubscribersTab />
+        </TabsContent>
+        <TabsContent value="insights" className="mt-6">
+          <AdminInsightsTab />
         </TabsContent>
       </Tabs>
     </div>

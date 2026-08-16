@@ -4,6 +4,7 @@ import { ArrowRight } from 'lucide-react';
 import { format } from 'date-fns';
 import { getCategoryImage } from '@/lib/categoryImages';
 import { getCategoryMeta } from '@/lib/categories';
+import { articleUrl } from '@/lib/articleUrl';
 
 export default function FeaturedArticleSection({ article, sideArticles = [] }) {
   if (!article) return null;
@@ -34,7 +35,7 @@ export default function FeaturedArticleSection({ article, sideArticles = [] }) {
               </p>
             )}
             <Link
-              to={`/Article?id=${article.id}`}
+              to={articleUrl(article)}
               className="inline-flex items-center gap-2 text-accent font-bold text-sm hover:gap-3 transition-all"
             >
               Read full story <ArrowRight className="w-4 h-4" />
@@ -52,7 +53,7 @@ export default function FeaturedArticleSection({ article, sideArticles = [] }) {
             </div>
             <div className="space-y-4">
               {sideArticles.slice(0, 3).map((a) => (
-                <Link key={a.id} to={`/Article?id=${a.id}`} className="block group">
+                <Link key={a.id} to={articleUrl(a)} className="block group">
                   <h4 className="font-display font-black text-base leading-snug group-hover:underline text-primary-foreground">
                     {a.title}
                   </h4>
