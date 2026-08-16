@@ -3,24 +3,14 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import ArticleCard from '@/components/news/ArticleCard';
 import { Skeleton } from '@/components/ui/skeleton';
-
-const CATEGORIES = [
-  { value: 'newborn', label: 'Newborn', emoji: '👶', color: 'bg-pink-100 text-pink-600 border-pink-200' },
-  { value: 'toddler', label: 'Toddler', emoji: '🧸', color: 'bg-yellow-100 text-yellow-600 border-yellow-200' },
-  { value: 'education', label: 'Education', emoji: '📚', color: 'bg-blue-100 text-blue-600 border-blue-200' },
-  { value: 'health', label: 'Health', emoji: '💊', color: 'bg-green-100 text-green-600 border-green-200' },
-  { value: 'activities', label: 'Activities', emoji: '🎨', color: 'bg-purple-100 text-purple-600 border-purple-200' },
-  { value: 'nutrition', label: 'Nutrition', emoji: '🥦', color: 'bg-emerald-100 text-emerald-600 border-emerald-200' },
-  { value: 'teen', label: 'Teen', emoji: '🎒', color: 'bg-indigo-100 text-indigo-600 border-indigo-200' },
-  { value: 'parenting', label: 'Parenting', emoji: '❤️', color: 'bg-rose-100 text-rose-600 border-rose-200' },
-];
+import { CATEGORIES } from '@/lib/categories';
 
 export default function Categories() {
   const urlParams = new URLSearchParams(window.location.search);
   const [selected, setSelected] = useState(urlParams.get('cat') || null);
 
   const { data: articles = [], isLoading } = useQuery({
-    queryKey: ['articles'],
+    queryKey: ['articles', 'categories'],
     queryFn: () => base44.entities.Article.filter({ status: 'published' }, '-published_date', 100),
   });
 

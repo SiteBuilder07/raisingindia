@@ -5,23 +5,13 @@ import { useState } from 'react';
 import { useAuth } from '@/lib/AuthContext';
 import NewsletterInlineForm from '@/components/common/NewsletterInlineForm';
 import BrandMark from '@/components/common/BrandMark';
+import { CATEGORIES } from '@/lib/categories';
 
 const NAV_ITEMS = [
   { path: '/Home', label: 'Home', icon: Home },
   { path: '/Categories', label: 'Topics', icon: Grid3X3 },
   { path: '/Search', label: 'Search', icon: Search },
   { path: '/Bookmarks', label: 'Saved', icon: Bookmark },
-];
-
-const FOOTER_TOPICS = [
-  { label: 'Newborn',    slug: 'newborn' },
-  { label: 'Toddler',    slug: 'toddler' },
-  { label: 'Education',  slug: 'education' },
-  { label: 'Health',     slug: 'health' },
-  { label: 'Activities', slug: 'activities' },
-  { label: 'Nutrition',  slug: 'nutrition' },
-  { label: 'Teen',       slug: 'teen' },
-  { label: 'Parenting',  slug: 'parenting' },
 ];
 
 export default function AppLayout() {
@@ -169,7 +159,7 @@ export default function AppLayout() {
             <div className="col-span-1 md:col-span-3">
               <h4 className="font-display font-bold mb-3 text-sm uppercase tracking-wider">Topics</h4>
               <div className="grid grid-cols-2 gap-y-2 gap-x-3">
-                {FOOTER_TOPICS.map(({ label, slug }) => (
+                {CATEGORIES.map(({ label, value: slug }) => (
                   <Link
                     key={slug}
                     to={`/Categories?cat=${slug}`}

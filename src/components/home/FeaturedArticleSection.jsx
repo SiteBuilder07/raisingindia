@@ -3,21 +3,11 @@ import { Badge } from '@/components/ui/badge';
 import { ArrowRight } from 'lucide-react';
 import { format } from 'date-fns';
 import { getCategoryImage } from '@/lib/categoryImages';
-
-const CATEGORY_META = {
-  newborn:    { emoji: '👶', label: 'Newborn' },
-  toddler:    { emoji: '🧸', label: 'Toddler' },
-  education:  { emoji: '📚', label: 'Education' },
-  health:     { emoji: '💊', label: 'Health' },
-  activities: { emoji: '🎨', label: 'Activities' },
-  nutrition:  { emoji: '🥦', label: 'Nutrition' },
-  teen:       { emoji: '🎒', label: 'Teen' },
-  parenting:  { emoji: '❤️', label: 'Parenting' },
-};
+import { getCategoryMeta } from '@/lib/categories';
 
 export default function FeaturedArticleSection({ article, sideArticles = [] }) {
   if (!article) return null;
-  const meta = CATEGORY_META[article.category] || { emoji: '📝', label: article.category };
+  const meta = getCategoryMeta(article.category);
 
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 py-8">

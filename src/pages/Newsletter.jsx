@@ -16,16 +16,28 @@ export default function Newsletter() {
     e.preventDefault();
     if (!email) return;
     setLoading(true);
-    await base44.entities.NewsletterSubscriber.create({ email, name, is_active: true });
+    try {
+      const existing = await base44.entities.NewsletterSubscriber.filter({ email });
+      if (existing.length > 0) {
+        if (!existing[0].is_active) {
+          await base44.entities.NewsletterSubscriber.update(existing[0].id, { is_active: true, name: name || existing[0].name });
+        }
+      } else {
+        await base44.entities.NewsletterSubscriber.create({ email, name, is_active: true });
+      }
+      setSubmitted(true);
+      toast.success('Welcome to the RaisingIndia family! 🎉');
+      base44.analytics.track({ eventName: 'newsletter_subscribe', properties: { source: 'newsletter_page' } });
+    } catch {
+      toast.error('Something went wrong. Please try again.');
+    }
     setLoading(false);
-    setSubmitted(true);
-    toast.success('Welcome to the RaisingIndia family! 🎉');
   };
 
   return (
     <div className="min-h-screen bg-background">
       {/* Hero */}
-      <div className="relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #ff6b35 0%, #f7c59f 100%)' }}>
+      <div className="relative overflow-hidden bg-gradient-to-br from-accent to-accent/60">
         <div className="absolute inset-0 opacity-10 text-[20rem] flex items-center justify-center leading-none select-none">💌</div>
         <div className="relative max-w-3xl mx-auto px-4 sm:px-6 py-20 text-center">
           <div className="text-6xl mb-4">💌</div>
@@ -93,8 +105,7 @@ export default function Newsletter() {
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="w-full h-12 text-base font-black gap-2"
-                  style={{ background: 'linear-gradient(135deg, #ff6b35 0%, #f7a35c 100%)' }}
+                  className="w-full h-12 text-base font-black gap-2 bg-gradient-to-r from-accent to-accent/70 hover:opacity-90"
                 >
                   <Mail className="w-5 h-5" />
                   {loading ? 'Subscribing...' : 'Subscribe for Free 🎉'}

@@ -13,11 +13,7 @@ import CommentSection from '@/components/news/CommentSection';
 import NewsletterSignup from '@/components/news/NewsletterSignup';
 import AuthorAvatar from '@/components/common/AuthorAvatar';
 import { getCategoryImage } from '@/lib/categoryImages';
-
-const CATEGORY_LABEL = {
-  newborn: 'Newborn', toddler: 'Toddler', education: 'Education', health: 'Health',
-  activities: 'Activities', nutrition: 'Nutrition', teen: 'Teen', parenting: 'Parenting',
-};
+import { getCategoryMeta } from '@/lib/categories';
 
 export default function Article() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -28,7 +24,7 @@ export default function Article() {
 
   const { data: article, isLoading } = useQuery({
     queryKey: ['article', articleId],
-    queryFn: () => base44.entities.Article.filter({ id: articleId }).then(r => r[0]),
+    queryFn: () => base44.entities.Article.get(articleId),
     enabled: !!articleId,
   });
 
@@ -52,18 +48,30 @@ export default function Article() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['bookmarks'] });
       toast.success(isBookmarked ? 'Removed from saved' : 'Saved for later');
+      base44.analytics.track({ eventName: 'article_bookmark', properties: { article_id: articleId, action: isBookmarked ? 'remove' : 'save' } });
     },
   });
 
-  // Count view
+  // Count view — atomic increment avoids lost updates when multiple readers hit the same article
   useEffect(() => {
-    if (article && !viewCounted) {
-      base44.entities.Article.update(article.id, { views_count: (article.views_count || 0) + 1 });
+    if (articleId && !viewCounted) {
+      base44.entities.Article.updateMany({ id: articleId }, { $inc: { views_count: 1 } });
       setViewCounted(true);
     }
-  }, [article, viewCounted]);
+  }, [articleId, viewCounted]);
+
+  // SEO — update page title and meta description
+  useEffect(() => {
+    if (article?.title) {
+      document.title = `${article.title} | RaisingIndia`;
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (article.summary && metaDesc) metaDesc.setAttribute('content', article.summary);
+    }
+    return () => { document.title = 'RaisingIndia'; };
+  }, [article]);
 
   const handleShare = async () => {
+    base44.analytics.track({ eventName: 'article_share', properties: { article_id: articleId } });
     if (navigator.share) {
       await navigator.share({ title: article.title, url: window.location.href });
     } else {
@@ -94,6 +102,10 @@ export default function Article() {
     );
   }
 
+  // Auto-estimate reading time from content if not explicitly set
+  const readingTime = article.reading_time_minutes ||
+    (article.content ? Math.max(1, Math.ceil(article.content.replace(/<[^>]*>/g, ' ').split(/\s+/).filter(Boolean).length / 200)) : null);
+
   return (
     <article className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
       {/* Back — category-aware */}
@@ -102,7 +114,7 @@ export default function Article() {
         className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-6 transition-colors font-semibold"
       >
         <ArrowLeft className="w-4 h-4" />
-        Back to {article.category ? CATEGORY_LABEL[article.category] || 'Topics' : 'Home'}
+        Back to {article.category ? getCategoryMeta(article.category).label : 'Home'}
       </Link>
 
       {/* Meta */}
@@ -132,8 +144,8 @@ export default function Article() {
           <div>
             <p className="font-semibold text-sm">{article.author_name || 'Staff Writer'}</p>
             <div className="flex items-center gap-3 text-xs text-muted-foreground">
-              {article.reading_time_minutes && (
-                <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{article.reading_time_minutes} min read</span>
+              {readingTime && (
+                <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{readingTime} min read</span>
               )}
               <span className="flex items-center gap-1"><Eye className="w-3 h-3" />{article.views_count || 0} views</span>
             </div>

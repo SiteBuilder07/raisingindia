@@ -1,34 +1,24 @@
 import { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Plus, Pencil, Trash2, Eye, FileText, Users, BarChart3, Star, CheckCircle2, XCircle, Headphones } from 'lucide-react';
-import { format } from 'date-fns';
-import { toast } from 'sonner';
+import { Plus, FileText, Eye, BarChart3, Users } from 'lucide-react';
 import { Navigate } from 'react-router-dom';
 import ArticleEditor from '@/components/admin/ArticleEditor';
-import PodcastEditor from '@/components/admin/PodcastEditor';
-import SpotlightEditor from '@/components/admin/SpotlightEditor';
+import AdminArticlesTab from '@/components/admin/AdminArticlesTab';
+import AdminSpotlightTab from '@/components/admin/AdminSpotlightTab';
+import AdminPodcastsTab from '@/components/admin/AdminPodcastsTab';
+import AdminCommentsTab from '@/components/admin/AdminCommentsTab';
+import AdminSubscribersTab from '@/components/admin/AdminSubscribersTab';
 
 export default function Admin() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [editingArticle, setEditingArticle] = useState(null);
   const [showEditor, setShowEditor] = useState(false);
-  const [editingPodcast, setEditingPodcast] = useState(null);
-  const [showPodcastEditor, setShowPodcastEditor] = useState(false);
-  const [editingSpotlight, setEditingSpotlight] = useState(null);
-  const [showSpotlightEditor, setShowSpotlightEditor] = useState(false);
 
   const { data: articles = [] } = useQuery({
     queryKey: ['admin-articles'],
@@ -39,62 +29,6 @@ export default function Admin() {
     queryKey: ['subscribers'],
     queryFn: () => base44.entities.NewsletterSubscriber.list('-created_date'),
   });
-
-  const { data: comments = [] } = useQuery({
-    queryKey: ['all-comments'],
-    queryFn: () => base44.entities.Comment.list('-created_date', 50),
-  });
-
-  const { data: spotlightItems = [] } = useQuery({
-    queryKey: ['admin-spotlight'],
-    queryFn: () => base44.entities.SpotlightItem.list('-created_date', 50),
-  });
-
-  const { data: podcasts = [] } = useQuery({
-    queryKey: ['admin-podcasts'],
-    queryFn: () => base44.entities.Podcast.list('-published_date', 50),
-  });
-
-  const deleteArticle = useMutation({
-    mutationFn: (id) => base44.entities.Article.delete(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-articles'] });
-      toast.success('Article deleted');
-    },
-  });
-
-  const setFeaturedArticle = async (article) => {
-    // Unfeature all, then feature selected
-    const currently = articles.filter(a => a.is_featured && a.id !== article.id);
-    await Promise.all(currently.map(a => base44.entities.Article.update(a.id, { is_featured: false })));
-    await base44.entities.Article.update(article.id, { is_featured: !article.is_featured });
-    queryClient.invalidateQueries({ queryKey: ['admin-articles'] });
-    toast.success(article.is_featured ? 'Removed from featured' : 'Set as featured article');
-  };
-
-  const approveSpotlight = async (item) => {
-    await base44.entities.SpotlightItem.update(item.id, { status: 'approved', is_featured: true });
-    queryClient.invalidateQueries({ queryKey: ['admin-spotlight'] });
-    toast.success('Spotlight item approved & featured!');
-  };
-
-  const rejectSpotlight = async (item) => {
-    await base44.entities.SpotlightItem.update(item.id, { status: 'rejected', is_featured: false });
-    queryClient.invalidateQueries({ queryKey: ['admin-spotlight'] });
-    toast.success('Spotlight item rejected');
-  };
-
-  const deleteSpotlight = async (id) => {
-    await base44.entities.SpotlightItem.delete(id);
-    queryClient.invalidateQueries({ queryKey: ['admin-spotlight'] });
-    toast.success('Deleted');
-  };
-
-  const deletePodcast = async (id) => {
-    await base44.entities.Podcast.delete(id);
-    queryClient.invalidateQueries({ queryKey: ['admin-podcasts'] });
-    toast.success('Episode deleted');
-  };
 
   // Admin gate — placed after all hooks to satisfy rules-of-hooks.
   if (user?.role !== 'admin') {
@@ -118,6 +52,7 @@ export default function Admin() {
     setShowEditor(false);
     setEditingArticle(null);
     queryClient.invalidateQueries({ queryKey: ['admin-articles'] });
+    queryClient.invalidateQueries({ queryKey: ['articles'] });
   };
 
   if (showEditor) {
@@ -175,202 +110,19 @@ export default function Admin() {
         </TabsList>
 
         <TabsContent value="articles" className="mt-6">
-          <div className="space-y-3">
-            {articles.map(article => (
-              <div key={article.id} className="flex items-center justify-between bg-card border border-border rounded-xl p-4">
-                <div className="flex-1 min-w-0 mr-4">
-                  <div className="flex items-center gap-2 mb-1">
-                    <Badge variant={article.status === 'published' ? 'default' : 'secondary'} className="text-xs">
-                      {article.status}
-                    </Badge>
-                    <Badge variant="outline" className="text-xs">{article.category}</Badge>
-                    {article.is_featured && <Badge className="bg-accent text-accent-foreground text-xs border-0">Featured</Badge>}
-                  </div>
-                  <h3 className="font-semibold truncate">{article.title}</h3>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    {article.views_count || 0} views · {article.created_date && format(new Date(article.created_date), 'MMM d, yyyy')}
-                  </p>
-                </div>
-                <div className="flex items-center gap-2 shrink-0">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => setFeaturedArticle(article)}
-                    title="Set as featured"
-                  >
-                    <Star className={`w-4 h-4 ${article.is_featured ? 'fill-accent text-accent' : ''}`} />
-                  </Button>
-                  <Button variant="ghost" size="icon" onClick={() => handleEdit(article)}>
-                    <Pencil className="w-4 h-4" />
-                  </Button>
-                  <Button variant="ghost" size="icon" onClick={() => deleteArticle.mutate(article.id)}>
-                    <Trash2 className="w-4 h-4 text-destructive" />
-                  </Button>
-                </div>
-              </div>
-            ))}
-            {articles.length === 0 && (
-              <div className="text-center py-12 text-muted-foreground">
-                No articles yet. Create your first one!
-              </div>
-            )}
-          </div>
+          <AdminArticlesTab onEdit={handleEdit} />
         </TabsContent>
-
         <TabsContent value="spotlight" className="mt-6">
-          <div className="flex items-center justify-between mb-4">
-            <p className="text-xs text-muted-foreground font-semibold">
-              Approve submissions to feature them on the homepage. ⭐ = currently featured.
-            </p>
-            <Button size="sm" className="gap-2" onClick={() => { setEditingSpotlight(null); setShowSpotlightEditor(true); }}>
-              <Plus className="w-4 h-4" /> New Item
-            </Button>
-          </div>
-
-          {showSpotlightEditor && (
-            <div className="mb-4">
-              <SpotlightEditor
-                item={editingSpotlight}
-                onSave={() => { setShowSpotlightEditor(false); setEditingSpotlight(null); queryClient.invalidateQueries({ queryKey: ['admin-spotlight'] }); }}
-                onCancel={() => { setShowSpotlightEditor(false); setEditingSpotlight(null); }}
-              />
-            </div>
-          )}
-
-          <div className="space-y-3">
-            {spotlightItems.map(item => (
-              <div key={item.id} className="flex gap-4 items-center bg-card border border-border rounded-xl p-4">
-                {item.image_url && (
-                  <img src={item.image_url} alt={item.title} className="w-14 h-14 rounded-xl object-cover flex-none" />
-                )}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-0.5">
-                    <Badge variant={item.status === 'approved' ? 'default' : item.status === 'rejected' ? 'destructive' : 'secondary'} className="text-xs">
-                      {item.status}
-                    </Badge>
-                    {item.is_featured && <Badge className="bg-accent text-white text-xs border-0">⭐ Featured</Badge>}
-                  </div>
-                  <p className="font-semibold text-sm truncate">{item.title}</p>
-                  <p className="text-xs text-muted-foreground">
-                    By {item.author_name}{item.author_age ? `, Age ${item.author_age}` : ''}{item.author_city ? `, ${item.author_city}` : ''}
-                  </p>
-                </div>
-                <div className="flex gap-1 shrink-0">
-                  {item.status !== 'approved' && (
-                    <Button variant="ghost" size="icon" onClick={() => approveSpotlight(item)} title="Approve & Feature">
-                      <CheckCircle2 className="w-4 h-4 text-green-500" />
-                    </Button>
-                  )}
-                  {item.status !== 'rejected' && (
-                    <Button variant="ghost" size="icon" onClick={() => rejectSpotlight(item)} title="Reject">
-                      <XCircle className="w-4 h-4 text-destructive" />
-                    </Button>
-                  )}
-                  <Button variant="ghost" size="icon" onClick={() => { setEditingSpotlight(item); setShowSpotlightEditor(true); }}>
-                    <Pencil className="w-4 h-4" />
-                  </Button>
-                  <Button variant="ghost" size="icon" onClick={() => deleteSpotlight(item.id)}>
-                    <Trash2 className="w-4 h-4 text-destructive" />
-                  </Button>
-                </div>
-              </div>
-            ))}
-            {spotlightItems.length === 0 && !showSpotlightEditor && (
-              <div className="text-center py-12 text-muted-foreground">No submissions yet.</div>
-            )}
-          </div>
+          <AdminSpotlightTab />
         </TabsContent>
-
         <TabsContent value="podcasts" className="mt-6">
-          <div className="flex items-center justify-between mb-4">
-            <p className="text-sm font-semibold text-muted-foreground">Manage podcast episodes</p>
-            <Button size="sm" className="gap-2" onClick={() => { setEditingPodcast(null); setShowPodcastEditor(true); }}>
-              <Plus className="w-4 h-4" /> New Episode
-            </Button>
-          </div>
-
-          {showPodcastEditor && (
-            <div className="mb-4">
-              <PodcastEditor
-                podcast={editingPodcast}
-                onSave={() => { setShowPodcastEditor(false); setEditingPodcast(null); queryClient.invalidateQueries({ queryKey: ['admin-podcasts'] }); }}
-                onCancel={() => { setShowPodcastEditor(false); setEditingPodcast(null); }}
-              />
-            </div>
-          )}
-
-          <div className="space-y-3">
-            {podcasts.map(ep => (
-              <div key={ep.id} className="flex gap-4 items-center bg-card border border-border rounded-xl p-4">
-                {ep.cover_image ? (
-                  <img src={ep.cover_image} alt={ep.title} className="w-12 h-12 rounded-xl object-cover flex-none" />
-                ) : (
-                  <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center flex-none">
-                    <Headphones className="w-5 h-5 text-accent" />
-                  </div>
-                )}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    {ep.is_latest && <Badge className="bg-accent text-white text-xs border-0">NEW</Badge>}
-                    {ep.episode_number && <span className="text-xs text-muted-foreground font-bold">Ep. {ep.episode_number}</span>}
-                  </div>
-                  <p className="font-semibold text-sm truncate">{ep.title}</p>
-                  {ep.duration && <p className="text-xs text-muted-foreground">{ep.duration}</p>}
-                </div>
-                <div className="flex gap-1 shrink-0">
-                  <Button variant="ghost" size="icon" onClick={() => { setEditingPodcast(ep); setShowPodcastEditor(true); }}>
-                    <Pencil className="w-4 h-4" />
-                  </Button>
-                  <Button variant="ghost" size="icon" onClick={() => deletePodcast(ep.id)}>
-                    <Trash2 className="w-4 h-4 text-destructive" />
-                  </Button>
-                </div>
-              </div>
-            ))}
-            {podcasts.length === 0 && !showPodcastEditor && (
-              <div className="text-center py-12 text-muted-foreground">No podcast episodes yet.</div>
-            )}
-          </div>
+          <AdminPodcastsTab />
         </TabsContent>
-
         <TabsContent value="comments" className="mt-6">
-          <div className="space-y-3">
-            {comments.map(comment => (
-              <div key={comment.id} className="bg-card border border-border rounded-xl p-4">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="font-semibold text-sm">{comment.author_name || 'Anonymous'}</span>
-                  <span className="text-xs text-muted-foreground">
-                    {format(new Date(comment.created_date), 'MMM d, yyyy')}
-                  </span>
-                </div>
-                <p className="text-sm text-muted-foreground">{comment.content}</p>
-              </div>
-            ))}
-            {comments.length === 0 && (
-              <div className="text-center py-12 text-muted-foreground">No comments yet.</div>
-            )}
-          </div>
+          <AdminCommentsTab />
         </TabsContent>
-
         <TabsContent value="subscribers" className="mt-6">
-          <div className="space-y-2">
-            {subscribers.map(sub => (
-              <div key={sub.id} className="flex items-center justify-between bg-card border border-border rounded-xl p-4">
-                <div>
-                  <p className="font-medium text-sm">{sub.email}</p>
-                  <p className="text-xs text-muted-foreground">
-                    Joined {format(new Date(sub.created_date), 'MMM d, yyyy')}
-                  </p>
-                </div>
-                <Badge variant={sub.is_active ? 'default' : 'secondary'} className="text-xs">
-                  {sub.is_active ? 'Active' : 'Inactive'}
-                </Badge>
-              </div>
-            ))}
-            {subscribers.length === 0 && (
-              <div className="text-center py-12 text-muted-foreground">No subscribers yet.</div>
-            )}
-          </div>
+          <AdminSubscribersTab />
         </TabsContent>
       </Tabs>
     </div>

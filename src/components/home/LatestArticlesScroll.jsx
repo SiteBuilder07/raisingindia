@@ -3,17 +3,7 @@ import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { getCategoryImage } from '@/lib/categoryImages';
-
-const CATEGORY_META = {
-  newborn:    { emoji: '👶', color: 'text-pink-600' },
-  toddler:    { emoji: '🧸', color: 'text-yellow-600' },
-  education:  { emoji: '📚', color: 'text-blue-600' },
-  health:     { emoji: '💊', color: 'text-green-600' },
-  activities: { emoji: '🎨', color: 'text-purple-600' },
-  nutrition:  { emoji: '🥦', color: 'text-emerald-600' },
-  teen:       { emoji: '🎒', color: 'text-indigo-600' },
-  parenting:  { emoji: '❤️', color: 'text-rose-600' },
-};
+import { getCategoryMeta } from '@/lib/categories';
 
 export default function LatestArticlesScroll({ articles, totalCount }) {
   const scrollRef = useRef(null);
@@ -67,7 +57,7 @@ export default function LatestArticlesScroll({ articles, totalCount }) {
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
         {articles.map((article) => {
-          const meta = CATEGORY_META[article.category] || { emoji: '📝', color: 'text-gray-600' };
+          const meta = getCategoryMeta(article.category);
           return (
             <Link
               key={article.id}
@@ -83,7 +73,7 @@ export default function LatestArticlesScroll({ articles, totalCount }) {
                   />
                 </div>
                 <div className="p-3">
-                  <span className={`text-xs font-black uppercase tracking-wide ${meta.color}`}>
+                  <span className={`text-xs font-black uppercase tracking-wide ${meta.textColor}`}>
                     {meta.emoji} {article.category}
                   </span>
                   <h4 className="font-display font-bold text-sm leading-snug mt-1 line-clamp-2 group-hover:text-accent transition-colors">

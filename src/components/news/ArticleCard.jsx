@@ -4,21 +4,11 @@ import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
 import AuthorAvatar from '@/components/common/AuthorAvatar';
 import { getCategoryImage } from '@/lib/categoryImages';
-
-const CATEGORY_META = {
-  newborn:   { emoji: '👶', color: 'bg-pink-100 text-pink-700 border-pink-200' },
-  toddler:   { emoji: '🧸', color: 'bg-yellow-100 text-yellow-700 border-yellow-200' },
-  education: { emoji: '📚', color: 'bg-blue-100 text-blue-700 border-blue-200' },
-  health:    { emoji: '💊', color: 'bg-green-100 text-green-700 border-green-200' },
-  activities:{ emoji: '🎨', color: 'bg-purple-100 text-purple-700 border-purple-200' },
-  nutrition: { emoji: '🥦', color: 'bg-emerald-100 text-emerald-700 border-emerald-200' },
-  teen:      { emoji: '🎒', color: 'bg-indigo-100 text-indigo-700 border-indigo-200' },
-  parenting: { emoji: '❤️', color: 'bg-rose-100 text-rose-700 border-rose-200' },
-};
+import { getCategoryMeta } from '@/lib/categories';
 
 export default function ArticleCard({ article, variant = 'default' }) {
   const isFeatured = variant === 'featured';
-  const meta = CATEGORY_META[article.category] || { emoji: '📝', color: 'bg-muted text-muted-foreground border-border' };
+  const meta = getCategoryMeta(article.category);
 
   return (
     <Link to={`/Article?id=${article.id}`} className={`group block ${isFeatured ? '' : 'h-full'}`}>

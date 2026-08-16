@@ -34,6 +34,7 @@ export default function SpotlightSubmitModal({ onClose }) {
     });
     setUploading(false);
     setSubmitted(true);
+    base44.analytics.track({ eventName: 'spotlight_submit', properties: { title: form.title } });
   };
 
   return (

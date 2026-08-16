@@ -9,7 +9,7 @@ export default function Search() {
   const [query, setQuery] = useState('');
 
   const { data: articles = [] } = useQuery({
-    queryKey: ['articles'],
+    queryKey: ['articles', 'search'],
     queryFn: () => base44.entities.Article.filter({ status: 'published' }, '-published_date', 100),
   });
 

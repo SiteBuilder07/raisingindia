@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, Headphones, Clock, Calendar, Video } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import CustomAudioPlayer from '@/components/common/CustomAudioPlayer';
 
 function formatDuration(seconds) {
@@ -24,15 +24,24 @@ export default function PodcastEpisode() {
 
   const { data: episode, isLoading } = useQuery({
     queryKey: ['podcast', id],
-    queryFn: () => base44.entities.Podcast.filter({ id }),
+    queryFn: () => base44.entities.Podcast.get(id),
     enabled: !!id,
-    select: (data) => data[0],
   });
 
   const { data: allEpisodes = [] } = useQuery({
     queryKey: ['podcasts-all'],
     queryFn: () => base44.entities.Podcast.list('-published_date', 20),
   });
+
+  // SEO — update page title and meta description
+  useEffect(() => {
+    if (episode?.title) {
+      document.title = `${episode.title} | RaisingIndia Podcast`;
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (episode.description && metaDesc) metaDesc.setAttribute('content', episode.description);
+    }
+    return () => { document.title = 'RaisingIndia'; };
+  }, [episode]);
 
   if (isLoading) {
     return (

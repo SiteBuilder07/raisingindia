@@ -15,7 +15,7 @@ export default function Bookmarks() {
   });
 
   const { data: articles = [], isLoading: loadingArticles } = useQuery({
-    queryKey: ['articles'],
+    queryKey: ['articles', 'bookmarks'],
     queryFn: () => base44.entities.Article.filter({ status: 'published' }, '-published_date', 200),
   });
 

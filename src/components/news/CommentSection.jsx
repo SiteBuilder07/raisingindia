@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
@@ -16,6 +16,7 @@ export default function CommentSection({ articleId }) {
   const [content, setContent] = useState('');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [honeypot, setHoneypot] = useState('');
   const { user } = useAuth();
   const queryClient = useQueryClient();
 
@@ -31,11 +32,21 @@ export default function CommentSection({ articleId }) {
       setContent('');
       if (!user) { setName(''); setEmail(''); }
       toast.success(vars.is_approved ? 'Comment posted!' : 'Thanks! Your comment is awaiting moderation.');
+      base44.analytics.track({ eventName: 'comment_post', properties: { article_id: articleId, is_registered: !!user } });
     },
   });
 
+  // Real-time — refresh when new comments arrive
+  useEffect(() => {
+    const unsubscribe = base44.entities.Comment.subscribe(() => {
+      queryClient.invalidateQueries({ queryKey: ['comments', articleId] });
+    });
+    return unsubscribe;
+  }, [articleId, queryClient]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (honeypot) return; // bot trap — silently drop
 
     const trimmedContent = content.trim();
     if (trimmedContent.length < 3) {
@@ -82,6 +93,17 @@ export default function CommentSection({ articleId }) {
       </div>
 
       <form onSubmit={handleSubmit} className="mb-8 bg-secondary/40 border border-border rounded-2xl p-5 space-y-3">
+        {/* Honeypot — hidden from humans, bots fill it */}
+        <input
+          type="text"
+          name="website"
+          value={honeypot}
+          onChange={(e) => setHoneypot(e.target.value)}
+          className="absolute left-[-9999px] w-px h-px overflow-hidden"
+          tabIndex={-1}
+          autoComplete="off"
+          aria-hidden="true"
+        />
         {!user && (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>

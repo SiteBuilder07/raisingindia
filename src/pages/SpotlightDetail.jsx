@@ -12,9 +12,8 @@ export default function SpotlightDetail() {
 
   const { data: item, isLoading } = useQuery({
     queryKey: ['spotlight', id],
-    queryFn: () => base44.entities.SpotlightItem.filter({ id }),
+    queryFn: () => base44.entities.SpotlightItem.get(id),
     enabled: !!id,
-    select: (data) => data[0],
   });
 
   const { data: others = [] } = useQuery({
@@ -44,7 +43,7 @@ export default function SpotlightDetail() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
-      <Button variant="ghost" onClick={() => navigate(-1)} className="gap-2 mb-6 -ml-2">
+      <Button variant="ghost" onClick={() => window.history.length > 1 ? navigate(-1) : navigate('/Home')} className="gap-2 mb-6 -ml-2">
         <ArrowLeft className="w-4 h-4" /> Back
       </Button>
 

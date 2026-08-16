@@ -11,7 +11,7 @@ import { toast } from 'sonner';
 import { Save, Send } from 'lucide-react';
 import ReactQuill from 'react-quill';
 
-const CATEGORIES = ['world', 'technology', 'business', 'sports', 'health', 'science', 'entertainment', 'politics'];
+import { CATEGORY_VALUES, CATEGORY_MAP } from '@/lib/categories';
 
 export default function ArticleEditor({ article, onSave }) {
   const { user } = useAuth();
@@ -22,7 +22,7 @@ export default function ArticleEditor({ article, onSave }) {
     slug: article?.slug || '',
     summary: article?.summary || '',
     content: article?.content || '',
-    category: article?.category || 'world',
+    category: article?.category || 'newborn',
     cover_image: article?.cover_image || '',
     author_name: article?.author_name || user?.full_name || '',
     author_avatar: article?.author_avatar || '',
@@ -104,8 +104,8 @@ export default function ArticleEditor({ article, onSave }) {
           <Select value={form.category} onValueChange={(v) => handleChange('category', v)}>
             <SelectTrigger><SelectValue /></SelectTrigger>
             <SelectContent>
-              {CATEGORIES.map(c => (
-                <SelectItem key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1)}</SelectItem>
+              {CATEGORY_VALUES.map(c => (
+                <SelectItem key={c} value={c}>{CATEGORY_MAP[c].label}</SelectItem>
               ))}
             </SelectContent>
           </Select>

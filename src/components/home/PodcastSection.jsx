@@ -3,12 +3,9 @@ import { base44 } from '@/api/base44Client';
 import { Play, Video, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
 import AuthorAvatar from '@/components/common/AuthorAvatar';
 
 export default function PodcastSection({ featuredArticle }) {
-  const [playing, setPlaying] = useState(false);
-
   const { data: podcasts = [] } = useQuery({
     queryKey: ['podcasts-latest'],
     queryFn: () => base44.entities.Podcast.list('-published_date', 1),
@@ -21,19 +18,14 @@ export default function PodcastSection({ featuredArticle }) {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Video Podcast Player */}
         <div className="relative rounded-3xl overflow-hidden bg-gray-900 text-white flex flex-col min-h-[280px]">
-          {/* Video preview or cover */}
-          {podcast?.video_url ? (
-            <video
-              src={podcast.video_url}
-              className="w-full aspect-video object-cover"
-              muted
-              preload="metadata"
-            />
-          ) : podcast?.cover_image ? (
+          {/* Cover preview — full video plays on the episode page */}
+          {podcast?.cover_image ? (
             <div className="relative aspect-video overflow-hidden">
               <img src={podcast.cover_image} alt="" className="w-full h-full object-cover" />
               <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                <Video className="w-12 h-12 text-white/60" />
+                <div className="w-16 h-16 rounded-full bg-accent flex items-center justify-center shadow-lg">
+                  <Play className="w-7 h-7 text-white fill-white ml-1" />
+                </div>
               </div>
             </div>
           ) : (
