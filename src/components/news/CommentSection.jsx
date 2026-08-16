@@ -48,14 +48,6 @@ export default function CommentSection({ articleId }) {
     },
   });
 
-  // Real-time — refresh when new comments arrive
-  useEffect(() => {
-    const unsubscribe = base44.entities.Comment.subscribe(() => {
-      queryClient.invalidateQueries({ queryKey: ['comments', articleId] });
-    });
-    return unsubscribe;
-  }, [articleId, queryClient]);
-
   const handleSubmit = (e) => {
     e.preventDefault();
     if (honeypot) return; // bot trap — silently drop

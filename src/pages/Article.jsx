@@ -20,7 +20,7 @@ export default function Article() {
   const { slug } = useParams();
   const urlParams = new URLSearchParams(window.location.search);
   const idParam = urlParams.get('id');
-  const { user } = useAuth();
+  const { user, navigateToLogin } = useAuth();
   const queryClient = useQueryClient();
   const [viewCounted, setViewCounted] = useState(false);
 
@@ -48,6 +48,11 @@ export default function Article() {
 
   const toggleBookmark = useMutation({
     mutationFn: async () => {
+      // Saving requires an account — otherwise the save would fail silently.
+      if (!user?.email) {
+        navigateToLogin();
+        return;
+      }
       if (isBookmarked) {
         const bm = bookmarks.find(b => b.article_id === articleId);
         if (bm) await base44.entities.Bookmark.delete(bm.id);
@@ -56,6 +61,7 @@ export default function Article() {
       }
     },
     onSuccess: () => {
+      if (!user?.email) return;
       queryClient.invalidateQueries({ queryKey: ['bookmarks'] });
       toast.success(isBookmarked ? 'Removed from saved' : 'Saved for later');
       base44.analytics.track({ eventName: 'article_bookmark', properties: { article_id: articleId, action: isBookmarked ? 'remove' : 'save' } });

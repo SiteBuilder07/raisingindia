@@ -20,21 +20,25 @@ export default function SpotlightSubmitModal({ onClose }) {
       return;
     }
     setUploading(true);
-    let image_url = '';
-    if (file) {
-      const res = await base44.integrations.Core.UploadFile({ file });
-      image_url = res.file_url;
+    try {
+      let image_url = '';
+      if (file) {
+        const res = await base44.integrations.Core.UploadFile({ file });
+        image_url = res.file_url;
+      }
+      await base44.entities.SpotlightItem.create({
+        ...form,
+        author_age: form.author_age ? parseInt(form.author_age) : undefined,
+        image_url,
+        status: 'pending',
+        is_featured: false,
+      });
+      setSubmitted(true);
+      base44.analytics.track({ eventName: 'spotlight_submit', properties: { title: form.title } });
+    } catch {
+      toast.error('Could not submit right now. Please try again.');
     }
-    await base44.entities.SpotlightItem.create({
-      ...form,
-      author_age: form.author_age ? parseInt(form.author_age) : undefined,
-      image_url,
-      status: 'pending',
-      is_featured: false,
-    });
     setUploading(false);
-    setSubmitted(true);
-    base44.analytics.track({ eventName: 'spotlight_submit', properties: { title: form.title } });
   };
 
   return (
