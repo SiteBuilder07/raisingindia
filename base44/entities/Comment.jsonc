@@ -8,11 +8,7 @@
     },
     "author_name": {
       "type": "string",
-      "description": "Commenter name"
-    },
-    "author_email": {
-      "type": "string",
-      "description": "Commenter email (private, admin only)"
+      "description": "Commenter display name"
     },
     "content": {
       "type": "string",
@@ -21,7 +17,7 @@
     "is_approved": {
       "type": "boolean",
       "default": false,
-      "description": "Whether comment is approved"
+      "description": "Whether comment is approved (admin moderation)"
     }
   },
   "required": [
@@ -30,14 +26,28 @@
   ],
   "rls": {
     "read": {
-      "user_condition": {
-        "role": "admin"
-      }
+      "$or": [
+        {
+          "data.is_approved": true
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
     },
     "create": {
-      "user_condition": {
-        "role": "admin"
-      }
+      "$and": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "data.is_approved": {
+            "$ne": true
+          }
+        }
+      ]
     },
     "update": {
       "user_condition": {
