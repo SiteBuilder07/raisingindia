@@ -1,0 +1,83 @@
+{
+  "name": "Author",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Author display name"
+    },
+    "slug": {
+      "type": "string",
+      "description": "URL-friendly slug"
+    },
+    "avatar": {
+      "type": "string",
+      "description": "Avatar photo URL"
+    },
+    "title": {
+      "type": "string",
+      "description": "Credential headline, e.g. Child Psychologist, PhD"
+    },
+    "bio": {
+      "type": "string",
+      "description": "Longer biography"
+    },
+    "credentials": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Credentials and qualifications"
+    },
+    "expertise": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Areas of expertise"
+    },
+    "website_url": {
+      "type": "string",
+      "description": "Personal website URL"
+    },
+    "twitter_url": {
+      "type": "string",
+      "description": "Twitter / X profile URL"
+    },
+    "linkedin_url": {
+      "type": "string",
+      "description": "LinkedIn profile URL"
+    },
+    "instagram_url": {
+      "type": "string",
+      "description": "Instagram profile URL"
+    },
+    "is_featured": {
+      "type": "boolean",
+      "default": false,
+      "description": "Featured author"
+    }
+  },
+  "required": [
+    "name",
+    "slug"
+  ],
+  "rls": {
+    "read": {},
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

@@ -5,7 +5,7 @@ import { useAuth } from '@/lib/AuthContext';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Clock, Eye, Bookmark, BookmarkCheck, Share2, ArrowLeft } from 'lucide-react';
+import { Clock, Eye, Bookmark, BookmarkCheck, Share2, ArrowLeft, BadgeCheck } from 'lucide-react';
 import { format } from 'date-fns';
 import { Link, useParams } from 'react-router-dom';
 import { setPageMeta, resetPageMeta } from '@/lib/seo';
@@ -35,6 +35,12 @@ export default function Article() {
   });
 
   const articleId = article?.id || idParam;
+
+  const { data: authorProfiles = [] } = useQuery({
+    queryKey: ['authors'],
+    queryFn: () => base44.entities.Author.list('-created_date', 100),
+  });
+  const authorProfile = authorProfiles.find(a => a.name === article?.author_name);
 
   const { data: bookmarks = [] } = useQuery({
     queryKey: ['bookmarks', user?.email],
@@ -165,18 +171,36 @@ export default function Article() {
 
       {/* Author & Actions */}
       <div className="flex items-center justify-between py-4 border-y border-border mb-8 gap-4 flex-wrap">
-        <div className="flex items-center gap-3">
-          <AuthorAvatar name={article.author_name} src={article.author_avatar} size="md" />
-          <div>
-            <p className="font-semibold text-sm">{article.author_name || 'Staff Writer'}</p>
-            <div className="flex items-center gap-3 text-xs text-muted-foreground">
-              {readingTime && (
-                <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{readingTime} min read</span>
-              )}
-              <span className="flex items-center gap-1"><Eye className="w-3 h-3" />{totalViews} views</span>
+        {authorProfile ? (
+          <Link to={`/author/${authorProfile.slug}`} className="flex items-center gap-3 group">
+            <AuthorAvatar name={article.author_name} src={article.author_avatar} size="md" />
+            <div>
+              <p className="font-semibold text-sm group-hover:text-accent transition-colors flex items-center gap-1">
+                {article.author_name || 'Staff Writer'}
+                <BadgeCheck className="w-4 h-4 text-accent" />
+              </p>
+              <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                {readingTime && (
+                  <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{readingTime} min read</span>
+                )}
+                <span className="flex items-center gap-1"><Eye className="w-3 h-3" />{totalViews} views</span>
+              </div>
+            </div>
+          </Link>
+        ) : (
+          <div className="flex items-center gap-3">
+            <AuthorAvatar name={article.author_name} src={article.author_avatar} size="md" />
+            <div>
+              <p className="font-semibold text-sm">{article.author_name || 'Staff Writer'}</p>
+              <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                {readingTime && (
+                  <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{readingTime} min read</span>
+                )}
+                <span className="flex items-center gap-1"><Eye className="w-3 h-3" />{totalViews} views</span>
+              </div>
             </div>
           </div>
-        </div>
+        )}
         <div className="flex items-center gap-2">
           <Button
             variant="outline"
