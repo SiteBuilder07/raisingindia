@@ -41,9 +41,6 @@ export default function AdminCommentsTab() {
           <div className="flex items-center justify-between gap-3 mb-2 flex-wrap">
             <div className="flex items-center gap-2 min-w-0">
               <span className="font-semibold text-sm truncate">{comment.author_name || 'Anonymous'}</span>
-              {comment.author_email && (
-                <span className="text-xs text-muted-foreground truncate">{comment.author_email}</span>
-              )}
               <Badge variant={comment.is_approved ? 'secondary' : 'outline'} className="text-xs shrink-0">
                 {comment.is_approved ? 'Live' : 'Pending'}
               </Badge>

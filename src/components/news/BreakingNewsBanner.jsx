@@ -14,8 +14,8 @@ export default function BreakingNewsBanner({ articles }) {
         </div>
         <div className="overflow-hidden">
           <div className="flex gap-8 animate-marquee whitespace-nowrap">
-            {articles.map((a) => (
-              <Link key={a.id} to={articleUrl(a)} className="text-sm hover:underline">
+            {[...articles, ...articles].map((a, i) => (
+              <Link key={`${a.id}-${i}`} to={articleUrl(a)} className="text-sm hover:underline">
                 {a.title}
               </Link>
             ))}

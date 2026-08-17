@@ -1,16 +1,25 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import ArticleCard from '@/components/news/ArticleCard';
 import { Input } from '@/components/ui/input';
 import { Search as SearchIcon } from 'lucide-react';
+import { setPageMeta, resetPageMeta } from '@/lib/seo';
 
 export default function Search() {
   const [query, setQuery] = useState('');
 
+  useEffect(() => {
+    setPageMeta({
+      title: 'Search',
+      description: 'Search parenting articles across every topic on RaisingIndia.',
+    });
+    return resetPageMeta;
+  }, []);
+
   const { data: articles = [] } = useQuery({
     queryKey: ['articles', 'search'],
-    queryFn: () => base44.entities.Article.filter({ status: 'published' }, '-published_date', 100),
+    queryFn: () => base44.entities.Article.filter({ status: 'published' }, '-published_date', 500),
   });
 
   const results = useMemo(() => {

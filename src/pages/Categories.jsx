@@ -1,20 +1,37 @@
-import { useState } from 'react';
+import { useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import ArticleCard from '@/components/news/ArticleCard';
 import { Skeleton } from '@/components/ui/skeleton';
 import { CATEGORIES } from '@/lib/categories';
+import { setPageMeta, resetPageMeta } from '@/lib/seo';
 
 export default function Categories() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const [selected, setSelected] = useState(urlParams.get('cat') || null);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const selected = searchParams.get('cat') || null;
 
   const { data: articles = [], isLoading } = useQuery({
     queryKey: ['articles', 'categories'],
-    queryFn: () => base44.entities.Article.filter({ status: 'published' }, '-published_date', 100),
+    queryFn: () => base44.entities.Article.filter({ status: 'published' }, '-published_date', 500),
   });
 
+  useEffect(() => {
+    setPageMeta({
+      title: 'Browse Topics',
+      description: 'Find parenting articles tailored to your child\'s stage — newborn, toddler, education, health and more.',
+    });
+    return resetPageMeta;
+  }, []);
+
   const filtered = selected ? articles.filter(a => a.category === selected) : articles;
+
+  const toggle = (value) => {
+    const next = new URLSearchParams(searchParams);
+    if (next.get('cat') === value) next.delete('cat');
+    else next.set('cat', value);
+    setSearchParams(next, { replace: true });
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
@@ -31,7 +48,7 @@ export default function Categories() {
           return (
             <button
               key={value}
-              onClick={() => setSelected(isActive ? null : value)}
+              onClick={() => toggle(value)}
               className={`relative overflow-hidden rounded-2xl p-5 text-left transition-all duration-200 border-2 ${
                 isActive ? 'ring-2 ring-accent ring-offset-2 scale-[1.02]' : 'hover:scale-[1.01]'
               } ${color} bg-opacity-30`}

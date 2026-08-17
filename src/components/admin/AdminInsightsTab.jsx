@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Eye, TrendingUp } from 'lucide-react';
 import { format } from 'date-fns';
 import { articleUrl } from '@/lib/articleUrl';
+import { useArticleViews } from '@/hooks/useArticleViews';
 
 export default function AdminInsightsTab() {
   const { data: articles = [] } = useQuery({
@@ -12,12 +13,17 @@ export default function AdminInsightsTab() {
     queryFn: () => base44.entities.Article.list('-created_date', 100),
   });
 
+  const { counts } = useArticleViews();
+
   const published = articles.filter(a => a.status === 'published');
-  const top = [...published].sort((a, b) => (b.views_count || 0) - (a.views_count || 0)).slice(0, 10);
+  const top = [...published]
+    .map(a => ({ ...a, _views: (a.views_count || 0) + (counts[a.id] || 0) }))
+    .sort((a, b) => b._views - a._views)
+    .slice(0, 10);
 
   const byCategory = published.reduce((acc, a) => {
     const key = a.category || 'other';
-    acc[key] = (acc[key] || 0) + (a.views_count || 0);
+    acc[key] = (acc[key] || 0) + (a.views_count || 0) + (counts[a.id] || 0);
     return acc;
   }, {});
   const categories = Object.entries(byCategory).sort((a, b) => b[1] - a[1]);
@@ -44,7 +50,7 @@ export default function AdminInsightsTab() {
               </p>
             </div>
             <span className="flex items-center gap-1 text-sm font-bold shrink-0">
-              <Eye className="w-3 h-3" /> {a.views_count || 0}
+              <Eye className="w-3 h-3" /> {a._views}
             </span>
           </Link>
         ))}

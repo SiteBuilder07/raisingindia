@@ -17,7 +17,7 @@ export default function Newsletter() {
     if (!email) return;
     setLoading(true);
     try {
-      await base44.functions.invoke('subscribeNewsletter', { email, name });
+      await base44.entities.NewsletterSubscriber.create({ email, name });
       setSubmitted(true);
       toast.success('Welcome to the RaisingIndia family! 🎉');
       base44.analytics.track({ eventName: 'newsletter_subscribe', properties: { source: 'newsletter_page' } });

@@ -4,9 +4,10 @@ import { useAuth } from '@/lib/AuthContext';
 import ArticleCard from '@/components/news/ArticleCard';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Bookmark } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 export default function Bookmarks() {
-  const { user } = useAuth();
+  const { user, navigateToLogin } = useAuth();
 
   const { data: bookmarks = [], isLoading: loadingBookmarks } = useQuery({
     queryKey: ['bookmarks', user?.email],
@@ -38,6 +39,14 @@ export default function Bookmarks() {
               </div>
             </div>
           ))}
+        </div>
+      ) : !user ? (
+        <div className="text-center py-16">
+          <Bookmark className="w-12 h-12 mx-auto text-muted-foreground/30 mb-4" />
+          <p className="text-muted-foreground text-lg">Sign in to see your saved articles</p>
+          <Button onClick={navigateToLogin} className="mt-4 gap-2 rounded-full font-bold">
+            Sign in
+          </Button>
         </div>
       ) : bookmarkedArticles.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

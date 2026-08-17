@@ -7,10 +7,12 @@ import { Pencil, Trash2, Star } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 import ConfirmDeleteDialog from './ConfirmDeleteDialog';
+import { useArticleViews } from '@/hooks/useArticleViews';
 
 export default function AdminArticlesTab({ onEdit }) {
   const queryClient = useQueryClient();
   const [deleteId, setDeleteId] = useState(null);
+  const { viewsOf } = useArticleViews();
 
   const { data: articles = [] } = useQuery({
     queryKey: ['admin-articles'],
@@ -58,7 +60,7 @@ export default function AdminArticlesTab({ onEdit }) {
             </div>
             <h3 className="font-semibold truncate">{article.title}</h3>
             <p className="text-xs text-muted-foreground mt-1">
-              {article.views_count || 0} views · {article.created_date && format(new Date(article.created_date), 'MMM d, yyyy')}
+              {viewsOf(article)} views · {article.created_date && format(new Date(article.created_date), 'MMM d, yyyy')}
             </p>
           </div>
           <div className="flex items-center gap-2 shrink-0">

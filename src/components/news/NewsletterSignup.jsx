@@ -15,7 +15,7 @@ export default function NewsletterSignup() {
     if (!email) return;
     setLoading(true);
     try {
-      await base44.functions.invoke('subscribeNewsletter', { email });
+      await base44.entities.NewsletterSubscriber.create({ email });
       setSubmitted(true);
       toast.success('Welcome to the RaisingIndia family! 🎉');
     } catch {

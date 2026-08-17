@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
@@ -22,8 +22,6 @@ export default function Article() {
   const idParam = urlParams.get('id');
   const { user, navigateToLogin } = useAuth();
   const queryClient = useQueryClient();
-  const [viewCounted, setViewCounted] = useState(false);
-
   const { data: article, isLoading } = useQuery({
     queryKey: ['article', slug || idParam],
     queryFn: async () => {
@@ -68,13 +66,23 @@ export default function Article() {
     },
   });
 
-  // Count view — done server-side, since readers can't write to articles
+  // Per-article view records — readers can't write to Article, so views live here.
+  const { data: viewRecords = [] } = useQuery({
+    queryKey: ['article-views', articleId],
+    queryFn: () => base44.entities.ArticleView.filter({ article_id: articleId }, '-created_date', 10000),
+    enabled: !!articleId,
+  });
+  const totalViews = (article?.views_count || 0) + viewRecords.length;
+
+  // One view per reader per article per day, guarded by a dated localStorage entry.
   useEffect(() => {
-    if (articleId && !viewCounted) {
-      base44.functions.invoke('incrementArticleView', { articleId });
-      setViewCounted(true);
-    }
-  }, [articleId, viewCounted]);
+    if (!articleId) return;
+    const key = `viewed:${articleId}`;
+    const today = new Date().toISOString().slice(0, 10);
+    if (localStorage.getItem(key) === today) return;
+    localStorage.setItem(key, today);
+    base44.entities.ArticleView.create({ article_id: articleId }).catch(() => {});
+  }, [articleId]);
 
   // SEO — title, description and social preview tags
   useEffect(() => {
@@ -165,7 +173,7 @@ export default function Article() {
               {readingTime && (
                 <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{readingTime} min read</span>
               )}
-              <span className="flex items-center gap-1"><Eye className="w-3 h-3" />{article.views_count || 0} views</span>
+              <span className="flex items-center gap-1"><Eye className="w-3 h-3" />{totalViews} views</span>
             </div>
           </div>
         </div>

@@ -6,9 +6,12 @@ import AuthorAvatar from '@/components/common/AuthorAvatar';
 import { getCategoryImage } from '@/lib/categoryImages';
 import { getCategoryMeta } from '@/lib/categories';
 import { articleUrl } from '@/lib/articleUrl';
+import { useArticleViews } from '@/hooks/useArticleViews';
 
 export default function ArticleCard({ article, variant = 'default' }) {
   const isFeatured = variant === 'featured';
+  const { viewsOf } = useArticleViews();
+  const views = viewsOf(article);
   const meta = getCategoryMeta(article.category);
 
   return (
@@ -69,10 +72,10 @@ export default function ArticleCard({ article, variant = 'default' }) {
                 </span>
               )}
             </div>
-            {article.views_count > 0 && (
+            {views > 0 && (
               <span className="flex items-center gap-1 font-semibold">
                 <Eye className="w-3 h-3" />
-                {article.views_count}
+                {views}
               </span>
             )}
           </div>
