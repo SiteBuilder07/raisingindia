@@ -25,11 +25,7 @@
         "role": "admin"
       }
     },
-    "create": {
-      "user_condition": {
-        "role": "admin"
-      }
-    },
+    "create": {},
     "update": {
       "user_condition": {
         "role": "admin"
