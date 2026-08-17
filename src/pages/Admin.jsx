@@ -5,8 +5,8 @@ import { useAuth } from '@/lib/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Plus, FileText, Eye, BarChart3, Users } from 'lucide-react';
-import { Navigate } from 'react-router-dom';
+import { Plus, FileText, Eye, BarChart3, Users, BookOpen } from 'lucide-react';
+import { Navigate, Link } from 'react-router-dom';
 const ArticleEditor = lazy(() => import('@/components/admin/ArticleEditor'));
 import AdminArticlesTab from '@/components/admin/AdminArticlesTab';
 import AdminSpotlightTab from '@/components/admin/AdminSpotlightTab';
@@ -77,9 +77,14 @@ export default function Admin() {
           <h1 className="font-display text-3xl font-bold">Admin Dashboard</h1>
           <p className="text-muted-foreground mt-1">Manage your news content</p>
         </div>
-        <Button onClick={handleNew} className="gap-2">
-          <Plus className="w-4 h-4" /> New Article
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" asChild className="gap-2">
+            <Link to="/AdminGuide"><BookOpen className="w-4 h-4" /> Guide</Link>
+          </Button>
+          <Button onClick={handleNew} className="gap-2">
+            <Plus className="w-4 h-4" /> New Article
+          </Button>
+        </div>
       </div>
 
       {/* Stats */}

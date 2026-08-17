@@ -23,6 +23,7 @@ import Contact from '@/pages/Contact';
 import Privacy from '@/pages/Privacy';
 import Terms from '@/pages/Terms';
 import AuthorProfile from '@/pages/AuthorProfile';
+import AdminGuide from '@/pages/AdminGuide';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -68,6 +69,7 @@ const AuthenticatedApp = () => {
         <Route path="/Privacy" element={<Privacy />} />
         <Route path="/Terms" element={<Terms />} />
         <Route path="/author/:slug" element={<AuthorProfile />} />
+        <Route path="/AdminGuide" element={<AdminGuide />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>
