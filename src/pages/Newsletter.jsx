@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { base44 } from '@/api/base44Client';
+import { subscribeNewsletter } from '@/lib/newsletter';
 import { toast } from 'sonner';
 import { CheckCircle2, Mail, Star, Heart, BookOpen, Mic } from 'lucide-react';
 import NewsletterInlineForm from '@/components/common/NewsletterInlineForm';
@@ -17,10 +18,14 @@ export default function Newsletter() {
     if (!email) return;
     setLoading(true);
     try {
-      await base44.entities.NewsletterSubscriber.create({ email, name });
+      const { alreadySubscribed } = await subscribeNewsletter(email, name);
       setSubmitted(true);
-      toast.success('Welcome to the RaisingIndia family! 🎉');
-      base44.analytics.track({ eventName: 'newsletter_subscribe', properties: { source: 'newsletter_page' } });
+      if (alreadySubscribed) {
+        toast.info("You're already on our list! 🎉");
+      } else {
+        toast.success('Welcome to the RaisingIndia family! 🎉');
+        base44.analytics.track({ eventName: 'newsletter_subscribe', properties: { source: 'newsletter_page' } });
+      }
     } catch {
       toast.error('Something went wrong. Please try again.');
     }

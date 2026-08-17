@@ -171,13 +171,15 @@ export default function Article() {
 
       {/* Author & Actions */}
       <div className="flex items-center justify-between py-4 border-y border-border mb-8 gap-4 flex-wrap">
-        {authorProfile ? (
-          <Link to={`/author/${authorProfile.slug}`} className="flex items-center gap-3 group">
-            <AuthorAvatar name={article.author_name} src={article.author_avatar} size="md" />
+        {(() => {
+          const hasAuthor = !!(article.author_name && article.author_name.trim());
+          const authorSlug = authorProfile?.slug || (article.author_name || '')
+            .toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+          const meta = (
             <div>
-              <p className="font-semibold text-sm group-hover:text-accent transition-colors flex items-center gap-1">
+              <p className="font-semibold text-sm flex items-center gap-1">
                 {article.author_name || 'Staff Writer'}
-                <BadgeCheck className="w-4 h-4 text-accent" />
+                {authorProfile && <BadgeCheck className="w-4 h-4 text-accent" />}
               </p>
               <div className="flex items-center gap-3 text-xs text-muted-foreground">
                 {readingTime && (
@@ -186,21 +188,22 @@ export default function Article() {
                 <span className="flex items-center gap-1"><Eye className="w-3 h-3" />{totalViews} views</span>
               </div>
             </div>
-          </Link>
-        ) : (
-          <div className="flex items-center gap-3">
-            <AuthorAvatar name={article.author_name} src={article.author_avatar} size="md" />
-            <div>
-              <p className="font-semibold text-sm">{article.author_name || 'Staff Writer'}</p>
-              <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                {readingTime && (
-                  <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{readingTime} min read</span>
-                )}
-                <span className="flex items-center gap-1"><Eye className="w-3 h-3" />{totalViews} views</span>
-              </div>
+          );
+          if (hasAuthor) {
+            return (
+              <Link to={`/author/${authorSlug}`} className="flex items-center gap-3 group">
+                <AuthorAvatar name={article.author_name} src={article.author_avatar} size="md" />
+                <div className="group-hover:text-accent transition-colors">{meta}</div>
+              </Link>
+            );
+          }
+          return (
+            <div className="flex items-center gap-3">
+              <AuthorAvatar name={article.author_name} src={article.author_avatar} size="md" />
+              {meta}
             </div>
-          </div>
-        )}
+          );
+        })()}
         <div className="flex items-center gap-2">
           <Button
             variant="outline"

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, CheckCircle2 } from 'lucide-react';
-import { base44 } from '@/api/base44Client';
+import { subscribeNewsletter } from '@/lib/newsletter';
 import { toast } from 'sonner';
 
 export default function NewsletterSignup() {
@@ -15,9 +15,13 @@ export default function NewsletterSignup() {
     if (!email) return;
     setLoading(true);
     try {
-      await base44.entities.NewsletterSubscriber.create({ email });
+      const { alreadySubscribed } = await subscribeNewsletter(email);
       setSubmitted(true);
-      toast.success('Welcome to the RaisingIndia family! 🎉');
+      if (alreadySubscribed) {
+        toast.info("You're already on our list! 🎉");
+      } else {
+        toast.success('Welcome to the RaisingIndia family! 🎉');
+      }
     } catch {
       toast.error('Something went wrong. Please try again.');
     }

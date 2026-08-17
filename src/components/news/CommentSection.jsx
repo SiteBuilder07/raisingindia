@@ -14,6 +14,25 @@ export default function CommentSection({ articleId }) {
   const { user, navigateToLogin } = useAuth();
   const queryClient = useQueryClient();
 
+  // Client-side rate limit: max 3 comments per 5 minutes per browser.
+  const RATE_LIMIT_WINDOW = 5 * 60 * 1000;
+  const RATE_LIMIT_MAX = 3;
+  const getRecentComments = () => {
+    try {
+      const stored = localStorage.getItem('comment_timestamps');
+      if (!stored) return [];
+      const now = Date.now();
+      return JSON.parse(stored).filter((ts) => now - ts < RATE_LIMIT_WINDOW);
+    } catch {
+      return [];
+    }
+  };
+  const recordComment = () => {
+    const recent = getRecentComments();
+    recent.push(Date.now());
+    localStorage.setItem('comment_timestamps', JSON.stringify(recent));
+  };
+
   const { data: comments = [] } = useQuery({
     queryKey: ['comments', articleId],
     queryFn: () => base44.entities.Comment.filter({ article_id: articleId, is_approved: true }, '-created_date', 200),
@@ -25,6 +44,7 @@ export default function CommentSection({ articleId }) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['comments', articleId] });
       setContent('');
+      recordComment();
       toast.success('Thanks! Your comment is awaiting moderation.');
       base44.analytics.track({ eventName: 'comment_post', properties: { article_id: articleId } });
     },
@@ -42,6 +62,11 @@ export default function CommentSection({ articleId }) {
     }
     if (trimmed.length > 2000) {
       toast.error('Comments must be under 2000 characters.');
+      return;
+    }
+    const recent = getRecentComments();
+    if (recent.length >= RATE_LIMIT_MAX) {
+      toast.error("You're commenting too quickly. Please wait a few minutes before posting again.");
       return;
     }
     addComment.mutate({

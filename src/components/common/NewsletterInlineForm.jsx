@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { base44 } from '@/api/base44Client';
+import { subscribeNewsletter } from '@/lib/newsletter';
 import { toast } from 'sonner';
 import { ArrowRight, CheckCircle2 } from 'lucide-react';
 
@@ -18,10 +19,14 @@ export default function NewsletterInlineForm({ variant = 'on-orange' }) {
     if (!email) return;
     setLoading(true);
     try {
-      await base44.entities.NewsletterSubscriber.create({ email });
+      const { alreadySubscribed } = await subscribeNewsletter(email);
       setSubmitted(true);
-      toast.success('Welcome to the RaisingIndia family! 🎉');
-      base44.analytics.track({ eventName: 'newsletter_subscribe', properties: { source: 'inline_form' } });
+      if (alreadySubscribed) {
+        toast.info("You're already on our list! 🎉");
+      } else {
+        toast.success('Welcome to the RaisingIndia family! 🎉');
+        base44.analytics.track({ eventName: 'newsletter_subscribe', properties: { source: 'inline_form' } });
+      }
     } catch {
       toast.error('Something went wrong. Please try again.');
     }
