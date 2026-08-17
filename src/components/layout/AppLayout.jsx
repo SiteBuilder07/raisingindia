@@ -1,11 +1,14 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { Home, Search, Bookmark, Grid3X3, PenSquare, Menu, X, Mail, Instagram, Facebook, Youtube } from 'lucide-react';
+import { Home, Search, Bookmark, Grid3X3, PenSquare, Menu, X, Mail, Instagram, Facebook, Youtube, LogIn, LogOut, User as UserIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { useAuth } from '@/lib/AuthContext';
 import NewsletterInlineForm from '@/components/common/NewsletterInlineForm';
 import BrandMark from '@/components/common/BrandMark';
 import { CATEGORIES } from '@/lib/categories';
+import {
+  DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator,
+} from '@/components/ui/dropdown-menu';
 
 const NAV_ITEMS = [
   { path: '/Home', label: 'Home', icon: Home },
@@ -17,8 +20,9 @@ const NAV_ITEMS = [
 export default function AppLayout() {
   const { pathname } = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { user } = useAuth();
+  const { user, isAuthenticated, logout, navigateToLogin } = useAuth();
   const isAdmin = user?.role === 'admin';
+  const displayName = user?.full_name || user?.email || 'Account';
 
   return (
     <div className="min-h-screen bg-background font-body">
@@ -72,6 +76,39 @@ export default function AppLayout() {
               )}
             </nav>
 
+            {/* Account (desktop) */}
+            <div className="hidden md:flex items-center gap-2">
+              {isAuthenticated ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="sm" className="gap-2 rounded-full">
+                      <UserIcon className="w-4 h-4" />
+                      <span className="max-w-[120px] truncate">{displayName}</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-48">
+                    <DropdownMenuLabel className="truncate">{displayName}</DropdownMenuLabel>
+                    {isAdmin && (
+                      <DropdownMenuItem asChild>
+                        <Link to="/Admin" className="gap-2"><PenSquare className="w-4 h-4" /> Admin</Link>
+                      </DropdownMenuItem>
+                    )}
+                    <DropdownMenuItem asChild>
+                      <Link to="/Bookmarks" className="gap-2"><Bookmark className="w-4 h-4" /> Saved</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => logout()} className="gap-2 text-destructive">
+                      <LogOut className="w-4 h-4" /> Sign out
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <Button size="sm" className="gap-2 rounded-full" onClick={navigateToLogin}>
+                  <LogIn className="w-4 h-4" /> Sign in
+                </Button>
+              )}
+            </div>
+
             {/* Mobile menu toggle */}
             <Button
               variant="ghost"
@@ -117,6 +154,24 @@ export default function AppLayout() {
                 </Button>
               </Link>
             )}
+            <div className="pt-2 border-t border-border mt-2">
+              {isAuthenticated ? (
+                <Button
+                  variant="outline"
+                  className="w-full justify-start gap-3 rounded-full font-semibold"
+                  onClick={() => { setMobileOpen(false); logout(); }}
+                >
+                  <LogOut className="w-4 h-4" /> Sign out
+                </Button>
+              ) : (
+                <Button
+                  className="w-full justify-start gap-3 rounded-full font-semibold"
+                  onClick={() => { setMobileOpen(false); navigateToLogin(); }}
+                >
+                  <LogIn className="w-4 h-4" /> Sign in
+                </Button>
+              )}
+            </div>
           </div>
         )}
       </header>
