@@ -5,6 +5,11 @@
     "article_id": {
       "type": "string",
       "description": "ID of the viewed article"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Optional notes or description for this view record"
     }
   },
   "required": [

@@ -7,7 +7,7 @@ import { toast } from 'sonner';
 import { CheckCircle2, Mail, Star, Heart, BookOpen, Mic } from 'lucide-react';
 import NewsletterInlineForm from '@/components/common/NewsletterInlineForm';
 
-export default function Newsletter() {
+export default function SubscribeNewsletter() {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [submitted, setSubmitted] = useState(false);

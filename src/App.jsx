@@ -15,7 +15,7 @@ import Search from '@/pages/Search';
 import Bookmarks from '@/pages/Bookmarks';
 import Admin from '@/pages/Admin';
 import Podcasts from '@/pages/Podcasts';
-import Newsletter from '@/pages/Newsletter';
+import SubscribeNewsletter from '@/pages/SubscribeNewsletter';
 import PodcastEpisode from '@/pages/PodcastEpisode';
 import SpotlightDetail from '@/pages/SpotlightDetail';
 import About from '@/pages/About';
@@ -60,7 +60,7 @@ const AuthenticatedApp = () => {
         <Route path="/Bookmarks" element={<Bookmarks />} />
         <Route path="/Admin" element={<Admin />} />
         <Route path="/Podcasts" element={<Podcasts />} />
-        <Route path="/Newsletter" element={<Newsletter />} />
+        <Route path="/Newsletter" element={<SubscribeNewsletter />} />
         <Route path="/PodcastEpisode" element={<PodcastEpisode />} />
         <Route path="/SpotlightDetail" element={<SpotlightDetail />} />
         <Route path="/About" element={<About />} />
