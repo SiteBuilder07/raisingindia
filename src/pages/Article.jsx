@@ -15,6 +15,7 @@ import NewsletterSignup from '@/components/news/NewsletterSignup';
 import AuthorAvatar from '@/components/common/AuthorAvatar';
 import { getCategoryImage } from '@/lib/categoryImages';
 import { getCategoryMeta } from '@/lib/categories';
+import DOMPurify from 'dompurify';
 
 export default function Article() {
   const { slug } = useParams();
@@ -243,7 +244,7 @@ export default function Article() {
           prose-ul:my-5 prose-ol:my-5 prose-li:my-1.5 prose-li:leading-[1.7]
           prose-blockquote:border-l-4 prose-blockquote:border-accent prose-blockquote:bg-secondary/60 prose-blockquote:rounded-r-xl prose-blockquote:py-2 prose-blockquote:px-5 prose-blockquote:not-italic prose-blockquote:font-medium
           prose-img:rounded-2xl prose-img:my-6"
-        dangerouslySetInnerHTML={{ __html: article.content || '' }}
+        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(article.content || '', { FORBID_TAGS: ['script'], FORBID_ATTR: ['onerror', 'onload', 'onclick', 'onmouseover'] }) }}
       />
 
       {/* Tags */}
