@@ -1,4 +1,5 @@
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
+import { useAuth } from '@/lib/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import {
@@ -42,6 +43,10 @@ function Tip({ children }) {
 }
 
 export default function AdminGuide() {
+  const { user } = useAuth();
+  if (user?.role !== 'admin') {
+    return <Navigate to="/Home" replace />;
+  }
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
       <div className="flex items-center justify-between mb-6 flex-wrap gap-3">

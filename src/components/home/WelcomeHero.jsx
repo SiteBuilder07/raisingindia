@@ -38,7 +38,7 @@ export default function WelcomeHero() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="text-muted-foreground text-base md:text-lg font-medium max-w-md mb-6 leading-relaxed"
           >
-            Expert parenting tips, child development insights &amp; education advice — written for Indian families. 🧡
+            In a world where facts are often lost in the noise of fiction, this is a space for what truly matters in raising a healthy, happy child. From trusted news and research to practical parenting tips, health, nutrition and education advice — all curated with Indian families in mind.
           </motion.p>
 
           <motion.div
