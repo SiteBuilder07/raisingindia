@@ -26,4 +26,8 @@ export default defineConfig({
     },
     dedupe: ['react', 'react-dom', 'react/jsx-runtime', 'react-dom/client'],
   },
+  optimizeDeps: {
+    force: true,
+    include: ['react', 'react-dom', 'react-dom/client', 'react/jsx-runtime'],
+  },
 });
