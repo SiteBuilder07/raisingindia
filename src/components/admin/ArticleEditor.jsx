@@ -14,6 +14,13 @@ import 'react-quill-new/dist/quill.snow.css';
 
 import { CATEGORY_VALUES, CATEGORY_MAP } from '@/lib/categories';
 
+const toLocalInput = (iso) => {
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return '';
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+};
+
 export default function ArticleEditor({ article, onSave }) {
   const { user } = useAuth();
   const isEditing = !!article;
@@ -58,7 +65,7 @@ export default function ArticleEditor({ article, onSave }) {
       ...form,
       status,
       tags: tagsInput.split(',').map(t => t.trim()).filter(Boolean),
-      published_date: status === 'published' ? new Date().toISOString() : form.published_date,
+      published_date: form.published_date,
       views_count: article?.views_count || 0,
     };
 
@@ -135,6 +142,15 @@ export default function ArticleEditor({ article, onSave }) {
             type="number"
             value={form.reading_time_minutes}
             onChange={(e) => handleChange('reading_time_minutes', parseInt(e.target.value) || 0)}
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label>Publish Date</Label>
+          <Input
+            type="datetime-local"
+            value={toLocalInput(form.published_date)}
+            onChange={(e) => handleChange('published_date', e.target.value ? new Date(e.target.value).toISOString() : new Date().toISOString())}
           />
         </div>
 
