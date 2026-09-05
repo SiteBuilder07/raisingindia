@@ -69,6 +69,11 @@
       "default": false,
       "description": "Show in The Interview section"
     },
+    "is_blog": {
+      "type": "boolean",
+      "default": false,
+      "description": "Show in the From the Blog section"
+    },
     "tags": {
       "type": "array",
       "items": {

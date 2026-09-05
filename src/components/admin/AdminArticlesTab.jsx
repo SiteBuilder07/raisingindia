@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Pencil, Trash2, Star, EyeOff } from 'lucide-react';
+import { Pencil, Trash2, Star, EyeOff, Newspaper } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 import ConfirmDeleteDialog from './ConfirmDeleteDialog';
@@ -54,6 +54,17 @@ export default function AdminArticlesTab({ onEdit }) {
     }
   };
 
+  const toggleBlog = async (article) => {
+    try {
+      await base44.entities.Article.update(article.id, { is_blog: !article.is_blog });
+      queryClient.invalidateQueries({ queryKey: ['admin-articles'] });
+      queryClient.invalidateQueries({ queryKey: ['articles'] });
+      toast.success(article.is_blog ? 'Removed from From the Blog' : 'Added to From the Blog');
+    } catch {
+      toast.error('Failed to update blog status');
+    }
+  };
+
   const articleToDelete = articles.find(a => a.id === deleteId);
 
   return (
@@ -67,6 +78,7 @@ export default function AdminArticlesTab({ onEdit }) {
               </Badge>
               <Badge variant="outline" className="text-xs">{article.category}</Badge>
               {article.is_featured && <Badge className="bg-accent text-accent-foreground text-xs border-0">Featured</Badge>}
+              {article.is_blog && <Badge variant="outline" className="text-xs">Blog</Badge>}
             </div>
             <h3 className="font-semibold truncate">{article.title}</h3>
             <p className="text-xs text-muted-foreground mt-1">
@@ -76,6 +88,9 @@ export default function AdminArticlesTab({ onEdit }) {
           <div className="flex items-center gap-2 shrink-0">
             <Button variant="ghost" size="icon" onClick={() => toggleFeatured(article)} title="Set as featured">
               <Star className={`w-4 h-4 ${article.is_featured ? 'fill-accent text-accent' : ''}`} />
+            </Button>
+            <Button variant="ghost" size="icon" onClick={() => toggleBlog(article)} title="Show in From the Blog">
+              <Newspaper className={`w-4 h-4 ${article.is_blog ? 'fill-accent text-accent' : ''}`} />
             </Button>
             {article.status === 'published' && (
               <Button variant="ghost" size="icon" onClick={() => unpublishArticle.mutate(article.id)} title="Unpublish (revert to draft)">

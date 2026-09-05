@@ -16,12 +16,16 @@ export default function SpotlightSection({ recentArticles = [] }) {
     queryFn: () => base44.entities.SpotlightItem.filter({ is_featured: true, status: 'approved' }, '-created_date', 10),
   });
 
+  const { data: blogPicks = [] } = useQuery({
+    queryKey: ['blog-picks'],
+    queryFn: () => base44.entities.Article.filter({ status: 'published', is_blog: true }, '-published_date', 2),
+  });
+
   const current = spotlightItems[spotlightIndex];
+  const blogArticles = blogPicks.length > 0 ? blogPicks : recentArticles.slice(0, 2);
 
   const prev = () => setSpotlightIndex((i) => (i - 1 + spotlightItems.length) % spotlightItems.length);
   const next = () => setSpotlightIndex((i) => (i + 1) % spotlightItems.length);
-
-  const blogArticles = recentArticles.slice(0, 2);
 
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
