@@ -18,7 +18,8 @@ export default function Home() {
   const featuredArticle = articles.find(a => a.is_featured);
   const interviewArticle = articles.find(a => a.is_interview);
   const sideArticles = articles.filter(a => a.id !== featuredArticle?.id).slice(0, 3);
-  const latestArticles = articles.filter(a => a.id !== featuredArticle?.id).slice(0, 12);
+  const sideArticleIds = new Set(sideArticles.map(a => a.id));
+  const latestArticles = articles.filter(a => a.id !== featuredArticle?.id && !sideArticleIds.has(a.id)).slice(0, 12);
 
   return (
     <div className="bg-background min-h-screen">
