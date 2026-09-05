@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import AuthorAvatar from '@/components/common/AuthorAvatar';
 import { articleUrl } from '@/lib/articleUrl';
 
-export default function PodcastSection({ featuredArticle }) {
+export default function PodcastSection({ interviewArticle }) {
   const { data: podcasts = [] } = useQuery({
     queryKey: ['podcasts-latest'],
     queryFn: () => base44.entities.Podcast.list('-published_date', 1),
@@ -59,7 +59,7 @@ export default function PodcastSection({ featuredArticle }) {
         </div>
 
         {/* Featured Interview / Quote */}
-        {featuredArticle ? (
+        {interviewArticle ? (
           <div className="bg-white border-2 border-border rounded-3xl p-8 flex flex-col justify-between">
             <div>
               <div className="flex items-center gap-2 mb-2">
@@ -72,16 +72,16 @@ export default function PodcastSection({ featuredArticle }) {
                 Conversations with experts, educators, and parents.
               </p>
               <blockquote className="font-display text-xl font-black leading-snug text-foreground mb-4">
-                "{featuredArticle.summary?.slice(0, 80) || featuredArticle.title}"
+                "{interviewArticle.summary?.slice(0, 80) || interviewArticle.title}"
               </blockquote>
-              {featuredArticle.author_name && (
+              {interviewArticle.author_name && (
                 <div className="flex items-center gap-3 mb-6">
-                  <AuthorAvatar name={featuredArticle.author_name} src={featuredArticle.author_avatar} size="md" />
-                  <p className="text-sm text-muted-foreground font-semibold">{featuredArticle.author_name}</p>
+                  <AuthorAvatar name={interviewArticle.author_name} src={interviewArticle.author_avatar} size="md" />
+                  <p className="text-sm text-muted-foreground font-semibold">{interviewArticle.author_name}</p>
                 </div>
               )}
             </div>
-            <Link to={articleUrl(featuredArticle)}>
+            <Link to={articleUrl(interviewArticle)}>
               <Button className="bg-accent text-white hover:bg-accent/90 font-bold rounded-full gap-2 transition-all">
                 Read the full interview <ArrowRight className="w-4 h-4" />
               </Button>

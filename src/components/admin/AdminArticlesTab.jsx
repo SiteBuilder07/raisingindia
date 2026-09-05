@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Pencil, Trash2, Star } from 'lucide-react';
+import { Pencil, Trash2, Star, EyeOff } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 import ConfirmDeleteDialog from './ConfirmDeleteDialog';
@@ -26,6 +26,16 @@ export default function AdminArticlesTab({ onEdit }) {
       queryClient.invalidateQueries({ queryKey: ['articles'] });
       toast.success('Article deleted');
     },
+  });
+
+  const unpublishArticle = useMutation({
+    mutationFn: (id) => base44.entities.Article.update(id, { status: 'draft' }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-articles'] });
+      queryClient.invalidateQueries({ queryKey: ['articles'] });
+      toast.success('Article unpublished (reverted to draft)');
+    },
+    onError: () => toast.error('Failed to unpublish'),
   });
 
   const toggleFeatured = async (article) => {
@@ -67,6 +77,11 @@ export default function AdminArticlesTab({ onEdit }) {
             <Button variant="ghost" size="icon" onClick={() => toggleFeatured(article)} title="Set as featured">
               <Star className={`w-4 h-4 ${article.is_featured ? 'fill-accent text-accent' : ''}`} />
             </Button>
+            {article.status === 'published' && (
+              <Button variant="ghost" size="icon" onClick={() => unpublishArticle.mutate(article.id)} title="Unpublish (revert to draft)">
+                <EyeOff className="w-4 h-4" />
+              </Button>
+            )}
             <Button variant="ghost" size="icon" onClick={() => onEdit(article)}>
               <Pencil className="w-4 h-4" />
             </Button>

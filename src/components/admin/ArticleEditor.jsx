@@ -37,6 +37,7 @@ export default function ArticleEditor({ article, onSave }) {
     status: article?.status || 'draft',
     is_featured: article?.is_featured || false,
     is_breaking: article?.is_breaking || false,
+    is_interview: article?.is_interview || false,
     tags: article?.tags || [],
     reading_time_minutes: article?.reading_time_minutes || 5,
     published_date: article?.published_date || new Date().toISOString(),
@@ -69,15 +70,20 @@ export default function ArticleEditor({ article, onSave }) {
       views_count: article?.views_count || 0,
     };
 
-    if (isEditing) {
-      await base44.entities.Article.update(article.id, data);
-      toast.success('Article updated');
-    } else {
-      await base44.entities.Article.create(data);
-      toast.success('Article created');
+    try {
+      if (isEditing) {
+        await base44.entities.Article.update(article.id, data);
+        toast.success('Article updated');
+      } else {
+        await base44.entities.Article.create(data);
+        toast.success('Article created');
+      }
+      onSave();
+    } catch (err) {
+      toast.error(err?.message ? `Save failed: ${err.message}` : 'Failed to save article');
+    } finally {
+      setSaving(false);
     }
-    setSaving(false);
-    onSave();
   };
 
   return (
@@ -171,6 +177,10 @@ export default function ArticleEditor({ article, onSave }) {
           <div className="flex items-center gap-2">
             <Switch checked={form.is_breaking} onCheckedChange={(v) => handleChange('is_breaking', v)} />
             <Label>Breaking News</Label>
+          </div>
+          <div className="flex items-center gap-2">
+            <Switch checked={form.is_interview} onCheckedChange={(v) => handleChange('is_interview', v)} />
+            <Label>Interview</Label>
           </div>
         </div>
       </div>

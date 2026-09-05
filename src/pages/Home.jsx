@@ -16,6 +16,7 @@ export default function Home() {
 
   const breakingArticles = articles.filter(a => a.is_breaking);
   const featuredArticle = articles.find(a => a.is_featured);
+  const interviewArticle = articles.find(a => a.is_interview);
   const sideArticles = articles.filter(a => a.id !== featuredArticle?.id).slice(0, 3);
   const latestArticles = articles.filter(a => a.id !== featuredArticle?.id).slice(0, 12);
 
@@ -28,8 +29,8 @@ export default function Home() {
           <WelcomeHero />
           <FeaturedArticleSection article={featuredArticle} sideArticles={sideArticles} />
           <LatestArticlesScroll articles={latestArticles} totalCount={articles.length} />
+          <PodcastSection interviewArticle={interviewArticle} />
           <SpotlightSection recentArticles={articles.slice(0, 2)} />
-          <PodcastSection featuredArticle={featuredArticle} />
         </>
       )}
 

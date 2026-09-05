@@ -64,6 +64,11 @@
       "default": false,
       "description": "Breaking/urgent news"
     },
+    "is_interview": {
+      "type": "boolean",
+      "default": false,
+      "description": "Show in The Interview section"
+    },
     "tags": {
       "type": "array",
       "items": {
