@@ -38,6 +38,7 @@ export default function ArticleEditor({ article, onSave }) {
     is_featured: article?.is_featured || false,
     is_breaking: article?.is_breaking || false,
     is_interview: article?.is_interview || false,
+    is_blog: article?.is_blog || false,
     tags: article?.tags || [],
     reading_time_minutes: article?.reading_time_minutes || 5,
     published_date: article?.published_date || new Date().toISOString(),
@@ -181,6 +182,10 @@ export default function ArticleEditor({ article, onSave }) {
           <div className="flex items-center gap-2">
             <Switch checked={form.is_interview} onCheckedChange={(v) => handleChange('is_interview', v)} />
             <Label>Interview</Label>
+          </div>
+          <div className="flex items-center gap-2">
+            <Switch checked={form.is_blog} onCheckedChange={(v) => handleChange('is_blog', v)} />
+            <Label>From the Blog</Label>
           </div>
         </div>
       </div>
