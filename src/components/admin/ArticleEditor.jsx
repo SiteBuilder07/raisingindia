@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
-import { Save, Send } from 'lucide-react';
+import { Save, Send, Upload, Loader2 } from 'lucide-react';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
 
@@ -45,6 +45,23 @@ export default function ArticleEditor({ article, onSave }) {
   });
   const [tagsInput, setTagsInput] = useState((article?.tags || []).join(', '));
   const [saving, setSaving] = useState(false);
+  const [uploadingCover, setUploadingCover] = useState(false);
+
+  const handleCoverUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingCover(true);
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      handleChange('cover_image', file_url);
+      toast.success('Cover image uploaded');
+    } catch (err) {
+      toast.error(err?.message ? `Upload failed: ${err.message}` : 'Failed to upload image');
+    } finally {
+      setUploadingCover(false);
+      e.target.value = '';
+    }
+  };
 
   const handleChange = (field, value) => {
     setForm(prev => ({ ...prev, [field]: value }));
@@ -136,11 +153,20 @@ export default function ArticleEditor({ article, onSave }) {
 
         <div className="space-y-2">
           <Label>Cover Image URL</Label>
-          <Input
-            value={form.cover_image}
-            onChange={(e) => handleChange('cover_image', e.target.value)}
-            placeholder="https://..."
-          />
+          <div className="flex gap-2">
+            <Input
+              value={form.cover_image}
+              onChange={(e) => handleChange('cover_image', e.target.value)}
+              placeholder="https://..."
+            />
+            <label className="shrink-0">
+              <input type="file" accept="image/*" className="hidden" onChange={handleCoverUpload} />
+              <span className="inline-flex h-9 items-center gap-2 rounded-md border border-input bg-background px-3 text-sm font-medium shadow-sm hover:bg-accent hover:text-accent-foreground cursor-pointer">
+                {uploadingCover ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
+                Upload
+              </span>
+            </label>
+          </div>
         </div>
 
         <div className="space-y-2">
