@@ -105,10 +105,13 @@ export default function Article() {
 
   const handleShare = async () => {
     base44.analytics.track({ eventName: 'article_share', properties: { article_id: articleId } });
+    const shareUrl = article.slug
+      ? `${window.location.origin}/share/${article.slug}.html`
+      : window.location.href;
     if (navigator.share) {
-      await navigator.share({ title: article.title, url: window.location.href });
+      await navigator.share({ title: article.title, url: shareUrl });
     } else {
-      await navigator.clipboard.writeText(window.location.href);
+      await navigator.clipboard.writeText(shareUrl);
       toast.success('Link copied!');
     }
   };
