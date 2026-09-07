@@ -186,7 +186,9 @@ export default function Article() {
                 {readingTime && (
                   <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{readingTime} min read</span>
                 )}
-                <span className="flex items-center gap-1"><Eye className="w-3 h-3" />{totalViews} views</span>
+                {user?.role === 'admin' && (
+                  <span className="flex items-center gap-1"><Eye className="w-3 h-3" />{totalViews} views</span>
+                )}
               </div>
             </div>
           );
