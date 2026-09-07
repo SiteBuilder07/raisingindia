@@ -63,10 +63,10 @@ export default function LatestArticlesScroll({ articles, totalCount }) {
             <Link
               key={article.id}
               to={articleUrl(article)}
-              className="group flex-none w-52"
+              className="group flex-none w-56"
             >
               <div className="rounded-2xl overflow-hidden border-2 border-border bg-white hover:shadow-lg hover:border-accent/30 transition-all duration-300 hover:-translate-y-1">
-                <div className="aspect-square overflow-hidden bg-muted">
+                <div className="aspect-[4/3] overflow-hidden bg-muted">
                   <img
                     src={article.cover_image || getCategoryImage(article.category)}
                     alt={article.title}
@@ -77,7 +77,7 @@ export default function LatestArticlesScroll({ articles, totalCount }) {
                   <span className={`text-xs font-black uppercase tracking-wide ${meta.textColor}`}>
                     {meta.emoji} {article.category}
                   </span>
-                  <h4 className="font-display font-bold text-sm leading-snug mt-1 line-clamp-2 group-hover:text-accent transition-colors">
+                  <h4 className="font-display font-bold text-sm leading-snug mt-1 group-hover:text-accent transition-colors">
                     {article.title}
                   </h4>
                 </div>

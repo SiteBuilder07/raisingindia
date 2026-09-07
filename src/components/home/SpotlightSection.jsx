@@ -93,14 +93,14 @@ export default function SpotlightSection({ recentArticles = [] }) {
           {blogArticles.map((article) => (
             <Link key={article.id} to={articleUrl(article)} className="group flex gap-4 bg-white border-2 border-border rounded-2xl p-4 hover:border-accent/30 hover:shadow-md transition-all">
               {article.cover_image && (
-                <div className="w-24 h-20 rounded-xl overflow-hidden flex-none">
+                <div className="w-20 h-20 rounded-xl overflow-hidden flex-none">
                   <img src={article.cover_image} alt={article.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                 </div>
               )}
               <div className="flex flex-col justify-between min-w-0">
                 <div>
                   <span className="text-xs font-black text-accent uppercase tracking-wide">{article.category}</span>
-                  <h4 className="font-display font-bold text-sm leading-snug mt-0.5 line-clamp-2 group-hover:text-accent transition-colors">
+                  <h4 className="font-display font-bold text-sm leading-snug mt-0.5 group-hover:text-accent transition-colors">
                     {article.title}
                   </h4>
                   {article.summary && (
