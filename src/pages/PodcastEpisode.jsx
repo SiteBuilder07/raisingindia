@@ -2,11 +2,12 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, Headphones, Clock, Calendar, Video } from 'lucide-react';
+import { ArrowLeft, Headphones, Clock, Calendar, Video, Share2 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import { useState, useEffect } from 'react';
 import CustomAudioPlayer from '@/components/common/CustomAudioPlayer';
+import { toast } from 'sonner';
 
 function formatDuration(seconds) {
   if (!seconds || !Number.isFinite(seconds)) return null;
@@ -63,13 +64,34 @@ export default function PodcastEpisode() {
 
   const otherEpisodes = allEpisodes.filter(e => e.id !== episode.id).slice(0, 4);
 
+  const handleShare = async () => {
+    const slug = episode.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    const shareUrl = `${window.location.origin}/share/podcast-${slug}.html`;
+    base44.analytics.track({ eventName: 'podcast_share', properties: { episode_id: episode.id } });
+    if (navigator.share) {
+      await navigator.share({ title: episode.title, url: shareUrl });
+    } else {
+      await navigator.clipboard.writeText(shareUrl);
+      toast.success('Link copied!');
+    }
+  };
+
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
-      <Link to="/Podcasts">
-        <Button variant="ghost" className="gap-2 mb-6 -ml-2">
-          <ArrowLeft className="w-4 h-4" /> Back to Podcasts
+      <div className="flex items-center justify-between mb-6">
+        <Link to="/Podcasts">
+          <Button variant="ghost" className="gap-2 -ml-2">
+            <ArrowLeft className="w-4 h-4" /> Back to Podcasts
+          </Button>
+        </Link>
+        <Button
+          onClick={handleShare}
+          className="gap-2 rounded-full font-bold bg-accent text-white hover:bg-accent/90"
+        >
+          <Share2 className="w-4 h-4" />
+          Share
         </Button>
-      </Link>
+      </div>
 
       <div className="bg-white border-2 border-border rounded-3xl overflow-hidden shadow-lg mb-8">
         {/* Header */}
