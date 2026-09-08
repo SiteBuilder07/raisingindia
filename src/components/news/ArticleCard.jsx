@@ -7,10 +7,13 @@ import { getCategoryImage } from '@/lib/categoryImages';
 import { getCategoryMeta } from '@/lib/categories';
 import { articleUrl } from '@/lib/articleUrl';
 import { useArticleViews } from '@/hooks/useArticleViews';
+import { useAuth } from '@/lib/AuthContext';
 
 export default function ArticleCard({ article, variant = 'default' }) {
   const isFeatured = variant === 'featured';
-  const { viewsOf } = useArticleViews();
+  const { user } = useAuth();
+  const isAdmin = user?.role === 'admin';
+  const { viewsOf } = useArticleViews(isAdmin);
   const views = viewsOf(article);
   const meta = getCategoryMeta(article.category);
 
@@ -72,7 +75,7 @@ export default function ArticleCard({ article, variant = 'default' }) {
                 </span>
               )}
             </div>
-            {views > 0 && (
+            {isAdmin && views > 0 && (
               <span className="flex items-center gap-1 font-semibold">
                 <Eye className="w-3 h-3" />
                 {views}
