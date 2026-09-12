@@ -14,6 +14,8 @@ import 'react-quill-new/dist/quill.snow.css';
 
 import { CATEGORY_VALUES, CATEGORY_MAP } from '@/lib/categories';
 
+const SUGGESTED_TAGS = ['motherhood', 'mental health', 'newborn', 'toddler', 'education', 'nutrition', 'activities', 'teen'];
+
 const toLocalInput = (iso) => {
   const d = new Date(iso);
   if (isNaN(d.getTime())) return '';
@@ -194,6 +196,32 @@ export default function ArticleEditor({ article, onSave }) {
             onChange={(e) => setTagsInput(e.target.value)}
             placeholder="tech, AI, startup"
           />
+          <div className="flex flex-wrap gap-2 pt-1">
+            {SUGGESTED_TAGS.map(tag => {
+              const active = tagsInput.split(',').map(t => t.trim().toLowerCase()).includes(tag.toLowerCase());
+              return (
+                <button
+                  key={tag}
+                  type="button"
+                  onClick={() => {
+                    const current = tagsInput.split(',').map(t => t.trim()).filter(Boolean);
+                    if (active) {
+                      setTagsInput(current.filter(t => t.toLowerCase() !== tag.toLowerCase()).join(', '));
+                    } else {
+                      setTagsInput([...current, tag].join(', '));
+                    }
+                  }}
+                  className={`px-2.5 py-1 rounded-full text-xs font-semibold border transition-colors ${
+                    active
+                      ? 'bg-accent text-white border-accent'
+                      : 'bg-background text-muted-foreground border-border hover:border-accent hover:text-accent'
+                  }`}
+                >
+                  {tag}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         <div className="flex items-center gap-6 md:col-span-2">
