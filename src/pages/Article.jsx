@@ -106,7 +106,7 @@ export default function Article() {
   const handleShare = async () => {
     base44.analytics.track({ eventName: 'article_share', properties: { article_id: articleId } });
     const shareUrl = article.slug
-      ? `${window.location.origin}/share/${article.slug}.html`
+      ? `${window.location.origin}/share/${article.slug}.html?v=1`
       : window.location.href;
     try {
       if (navigator.share) {
