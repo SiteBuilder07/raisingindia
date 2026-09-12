@@ -108,11 +108,22 @@ export default function Article() {
     const shareUrl = article.slug
       ? `${window.location.origin}/share/${article.slug}.html`
       : window.location.href;
-    if (navigator.share) {
-      await navigator.share({ title: article.title, url: shareUrl });
-    } else {
-      await navigator.clipboard.writeText(shareUrl);
-      toast.success('Link copied!');
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: article.title, text: shareUrl, url: shareUrl });
+      } else {
+        await navigator.clipboard.writeText(shareUrl);
+        toast.success('Link copied to clipboard!');
+      }
+    } catch (err) {
+      if (err?.name !== 'AbortError') {
+        try {
+          await navigator.clipboard.writeText(shareUrl);
+          toast.success('Link copied to clipboard!');
+        } catch {
+          toast.error('Could not share link');
+        }
+      }
     }
   };
 
