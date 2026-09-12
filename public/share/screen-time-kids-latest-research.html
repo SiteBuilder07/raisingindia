@@ -14,7 +14,6 @@
   <meta name="twitter:title" content="Screen Time: Meta puts curfew on kids ">
   <meta name="twitter:description" content="As the debate around screens and children&#39;s health is evolving, these meaures are designed to curb prolonged use, reduce distractions and, during certain hours, block access altogether. ">
   <meta name="twitter:image" content="https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=1200&q=80">
-  <meta name="twitter:site" content="@raisingindia">
   <link rel="canonical" href="https://raisingindia.net/share/screen-time-kids-latest-research.html">
   <meta name="robots" content="index, follow">
   <style>
@@ -33,10 +32,11 @@
     .footer a { color: #e67e22; text-decoration: none; font-weight: 600; }
   </style>
   <script>
-    var bot = /bot|crawler|spider|crawling|facebookexternalhit|twitterbot|linkedinbot|slackbot|whatsapp|google|baidu|bing|yandex|duckduckgo|telegram|discord|skype|preview|applebot|facebot|ia_archiver|pingdom|uptimerobot|sitechecker|seznam|sogou|exabot|facebook|twitter|linkedin|slack/i;
-    if (!bot.test(navigator.userAgent)) {
-      window.location.replace('/article/screen-time-kids-latest-research');
-    }
+    // Social media crawlers (Twitterbot, FacebookBot, WhatsApp, etc.) do NOT execute
+    // JavaScript, so they see the meta tags above. Real browsers DO execute JS and
+    // get redirected to the actual article. No bot-detection regex needed — it
+    // incorrectly matched in-app browsers (e.g. X's browser has "Twitter" in UA).
+    window.location.replace('/article/screen-time-kids-latest-research');
   </script>
 </head>
 <body>

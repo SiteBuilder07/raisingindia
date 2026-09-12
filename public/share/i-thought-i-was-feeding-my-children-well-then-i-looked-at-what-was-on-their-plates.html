@@ -14,7 +14,6 @@
   <meta name="twitter:title" content="I Thought I Was Feeding My Children Well-then I looked at their plates">
   <meta name="twitter:description" content="As a parent and health journalist, I slowly realised how packaged foods had become part of my children’s everyday diet. Cutting back on ultra-processed foods taught me that healthy eating is not just about calories—and why India’s front-of-pack warning label debate matters.">
   <meta name="twitter:image" content="https://images.assettype.com/outlookindia/2025-06-23/06qmho99/Screenshot_2025_06_23_181442.png">
-  <meta name="twitter:site" content="@raisingindia">
   <link rel="canonical" href="https://raisingindia.net/share/i-thought-i-was-feeding-my-children-well-then-i-looked-at-what-was-on-their-plates.html">
   <meta name="robots" content="index, follow">
   <style>
@@ -33,10 +32,11 @@
     .footer a { color: #e67e22; text-decoration: none; font-weight: 600; }
   </style>
   <script>
-    var bot = /bot|crawler|spider|crawling|facebookexternalhit|twitterbot|linkedinbot|slackbot|whatsapp|google|baidu|bing|yandex|duckduckgo|telegram|discord|skype|preview|applebot|facebot|ia_archiver|pingdom|uptimerobot|sitechecker|seznam|sogou|exabot|facebook|twitter|linkedin|slack/i;
-    if (!bot.test(navigator.userAgent)) {
-      window.location.replace('/article/i-thought-i-was-feeding-my-children-well-then-i-looked-at-what-was-on-their-plates');
-    }
+    // Social media crawlers (Twitterbot, FacebookBot, WhatsApp, etc.) do NOT execute
+    // JavaScript, so they see the meta tags above. Real browsers DO execute JS and
+    // get redirected to the actual article. No bot-detection regex needed — it
+    // incorrectly matched in-app browsers (e.g. X's browser has "Twitter" in UA).
+    window.location.replace('/article/i-thought-i-was-feeding-my-children-well-then-i-looked-at-what-was-on-their-plates');
   </script>
 </head>
 <body>
