@@ -11,7 +11,9 @@ export const CATEGORIES = [
   { value: 'activities', label: 'Activities', emoji: '🎨', color: 'bg-purple-100 text-purple-700 border-purple-200', textColor: 'text-purple-600' },
   { value: 'nutrition',  label: 'Nutrition',  emoji: '🥦', color: 'bg-emerald-100 text-emerald-700 border-emerald-200', textColor: 'text-emerald-600' },
   { value: 'teen',       label: 'Teen',       emoji: '🎒', color: 'bg-indigo-100 text-indigo-700 border-indigo-200', textColor: 'text-indigo-600' },
-  { value: 'parenting',  label: 'Parenting',  emoji: '❤️', color: 'bg-rose-100 text-rose-700 border-rose-200',     textColor: 'text-rose-600' },
+  { value: 'parenting',     label: 'Parenting',     emoji: '❤️', color: 'bg-rose-100 text-rose-700 border-rose-200',         textColor: 'text-rose-600' },
+  { value: 'motherhood',   label: 'Motherhood',   emoji: '🤱', color: 'bg-fuchsia-100 text-fuchsia-700 border-fuchsia-200', textColor: 'text-fuchsia-600' },
+  { value: 'mental_health', label: 'Mental Health', emoji: '🧠', color: 'bg-teal-100 text-teal-700 border-teal-200',       textColor: 'text-teal-600' },
 ];
 
 export const CATEGORY_VALUES = CATEGORIES.map(c => c.value);

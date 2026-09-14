@@ -110,6 +110,8 @@ export default {
     'bg-rose-500/10', 'bg-cyan-500/10', 'bg-pink-500/10', 'bg-amber-500/10',
     'text-blue-600', 'text-violet-600', 'text-emerald-600', 'text-orange-600',
     'text-rose-600', 'text-cyan-600', 'text-pink-600', 'text-amber-600',
+    'text-fuchsia-600', 'text-teal-600',
+    'bg-fuchsia-100', 'bg-teal-100', 'text-fuchsia-700', 'text-teal-700', 'border-fuchsia-200', 'border-teal-200',
     'bg-opacity-10',
   ],
   plugins: [tailwindcssAnimate, tailwindcssTypography],

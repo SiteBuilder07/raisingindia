@@ -28,7 +28,9 @@
         "activities",
         "nutrition",
         "teen",
-        "parenting"
+        "parenting",
+        "motherhood",
+        "mental_health"
       ],
       "description": "Article category"
     },

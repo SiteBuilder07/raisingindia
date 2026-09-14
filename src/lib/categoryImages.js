@@ -14,7 +14,9 @@ export const CATEGORY_IMAGES = {
   activities: 'https://images.unsplash.com/photo-1596464716127-f2a82984de30?auto=format&fit=crop&w=800&q=80',
   nutrition:  'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?auto=format&fit=crop&w=800&q=80',
   teen:       'https://images.unsplash.com/photo-1573497019418-b400bb3ab074?auto=format&fit=crop&w=800&q=80',
-  parenting:  'https://images.unsplash.com/photo-1542037104857-ffbb0b9155fb?auto=format&fit=crop&w=800&q=80',
+  parenting:      'https://images.unsplash.com/photo-1542037104857-ffbb0b9155fb?auto=format&fit=crop&w=800&q=80',
+  motherhood:     'https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&w=800&q=80',
+  mental_health:  'https://images.unsplash.com/photo-1474418397763-88e81ad5e2c4?auto=format&fit=crop&w=800&q=80',
 };
 
 export const DEFAULT_CATEGORY_IMAGE = CATEGORY_IMAGES.parenting;
