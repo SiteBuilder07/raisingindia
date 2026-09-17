@@ -10,6 +10,10 @@
       "type": "string",
       "description": "Commenter display name"
     },
+    "author_email": {
+      "type": "string",
+      "description": "Commenter email (admin-only, used for server-side rate limiting)"
+    },
     "content": {
       "type": "string",
       "description": "Comment text"
@@ -38,16 +42,9 @@
       ]
     },
     "create": {
-      "$and": [
-        {
-          "created_by_id": "{{user.id}}"
-        },
-        {
-          "data.is_approved": {
-            "$ne": true
-          }
-        }
-      ]
+      "data.is_approved": {
+        "$ne": true
+      }
     },
     "update": {
       "user_condition": {
