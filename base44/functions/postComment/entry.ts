@@ -1,5 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
 import { isValidEmail, normalizeEmail, cleanText } from '../../shared/validation.ts';
+import { isAllowedOrigin } from '../../shared/originCheck.ts';
 
 const RATE_WINDOW_MS = 5 * 60 * 1000;
 const RATE_MAX = 3;
@@ -8,6 +9,9 @@ const RATE_MAX = 3;
 // never by the browser, and posting is rate limited per email address.
 export default async function (req: Request): Promise<Response> {
   try {
+    if (!isAllowedOrigin(req)) {
+      return Response.json({ error: 'Forbidden' }, { status: 403 });
+    }
     const base44 = createClientFromRequest(req);
     const body = await req.json().catch(() => ({}));
 

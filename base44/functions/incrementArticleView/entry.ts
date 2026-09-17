@@ -1,9 +1,13 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
+import { isAllowedOrigin } from '../../shared/originCheck.ts';
 
 // Public endpoint: bumps an article's view counter. Readers cannot write to
 // articles directly (admin-only RLS), so the increment happens server-side.
 export default async function (req: Request): Promise<Response> {
   try {
+    if (!isAllowedOrigin(req)) {
+      return Response.json({ error: 'Forbidden' }, { status: 403 });
+    }
     const base44 = createClientFromRequest(req);
     const body = await req.json().catch(() => ({}));
     const articleId = body?.articleId;

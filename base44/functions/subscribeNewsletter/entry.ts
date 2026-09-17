@@ -1,10 +1,14 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
 import { isValidEmail, normalizeEmail, cleanText } from '../../shared/validation.ts';
+import { isAllowedOrigin } from '../../shared/originCheck.ts';
 
 // Public endpoint: the ONLY way subscribers are created. The subscriber list
 // itself is admin-only, so de-duplication happens here.
 export default async function (req: Request): Promise<Response> {
   try {
+    if (!isAllowedOrigin(req)) {
+      return Response.json({ error: 'Forbidden' }, { status: 403 });
+    }
     const base44 = createClientFromRequest(req);
     const body = await req.json().catch(() => ({}));
 
