@@ -1,0 +1,101 @@
+{
+  "auth": "oauth",
+  "tools": {
+    "functions": [
+      {
+        "name": "get_article_view_counts",
+        "title": "Get article view counts",
+        "description": "Returns a map of article IDs to total view counts across all articles. Admin access only. Call when you need analytics on how many times articles have been read.",
+        "input_schema": {
+          "type": "object",
+          "properties": {}
+        },
+        "handler": "getArticleViewCounts",
+        "annotations": {
+          "read_only_hint": true,
+          "destructive_hint": false,
+          "idempotent_hint": true
+        }
+      },
+      {
+        "name": "list_article_comments",
+        "title": "List approved comments for an article",
+        "description": "Returns all approved (publicly visible) comments for a given article, excluding commenter email addresses. Call when you need to see reader discussion on a specific article.",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "articleId": {
+              "type": "string",
+              "description": "The ID of the article whose comments to retrieve."
+            }
+          },
+          "required": ["articleId"]
+        },
+        "handler": "listComments",
+        "annotations": {
+          "read_only_hint": true,
+          "destructive_hint": false,
+          "idempotent_hint": true
+        }
+      },
+      {
+        "name": "post_article_comment",
+        "title": "Post a comment on an article",
+        "description": "Posts a new comment on an article. Signed-in users' comments are auto-approved; guest comments require a name and email and go to moderation. Rate-limited to 3 comments per email every 5 minutes. Call when a user wants to leave a comment on an article.",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "articleId": {
+              "type": "string",
+              "description": "The ID of the article to comment on."
+            },
+            "content": {
+              "type": "string",
+              "description": "The comment text. Must be at least 3 characters and at most 2000."
+            },
+            "authorName": {
+              "type": "string",
+              "description": "Display name for the commenter. Required for guest comments; optional for signed-in users (uses their account name)."
+            },
+            "authorEmail": {
+              "type": "string",
+              "description": "Email address for the commenter. Required for guest comments; optional for signed-in users (uses their account email)."
+            }
+          },
+          "required": ["articleId", "content"]
+        },
+        "handler": "postComment",
+        "annotations": {
+          "read_only_hint": false,
+          "destructive_hint": false,
+          "idempotent_hint": false
+        }
+      },
+      {
+        "name": "subscribe_to_newsletter",
+        "title": "Subscribe to the newsletter",
+        "description": "Subscribes an email address to the RaisingIndia newsletter. If the email is already subscribed, it reactivates the subscription. Call when a user wants to join the mailing list.",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "string",
+              "description": "The email address to subscribe. Must be a valid email."
+            },
+            "name": {
+              "type": "string",
+              "description": "Optional subscriber name."
+            }
+          },
+          "required": ["email"]
+        },
+        "handler": "subscribeNewsletter",
+        "annotations": {
+          "read_only_hint": false,
+          "destructive_hint": false,
+          "idempotent_hint": true
+        }
+      }
+    ]
+  }
+}

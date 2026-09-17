@@ -24,9 +24,11 @@ import Privacy from '@/pages/Privacy';
 import Terms from '@/pages/Terms';
 import AuthorProfile from '@/pages/AuthorProfile';
 import AdminGuide from '@/pages/AdminGuide';
+import OAuthConsent from '@/pages/OAuthConsent';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
+  const isConsentPath = window.location.pathname === '/oauth/consent';
 
   // Show loading spinner while checking app public settings or auth
   if (isLoadingPublicSettings || isLoadingAuth) {
@@ -37,8 +39,8 @@ const AuthenticatedApp = () => {
     );
   }
 
-  // Handle authentication errors
-  if (authError) {
+  // Handle authentication errors (skip for the OAuth consent page, which manages its own auth flow)
+  if (authError && !isConsentPath) {
     if (authError.type === 'user_not_registered') {
       return <UserNotRegisteredError />;
     } else if (authError.type === 'auth_required') {
@@ -51,6 +53,7 @@ const AuthenticatedApp = () => {
   // Render the main app
   return (
     <Routes>
+      <Route path="/oauth/consent" element={<OAuthConsent />} />
       <Route path="/" element={<Navigate to="/Home" replace />} />
       <Route element={<AppLayout />}>
         <Route path="/Home" element={<Home />} />
