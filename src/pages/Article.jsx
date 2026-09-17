@@ -15,6 +15,7 @@ import NewsletterSignup from '@/components/news/NewsletterSignup';
 import AuthorAvatar from '@/components/common/AuthorAvatar';
 import { getCategoryImage } from '@/lib/categoryImages';
 import { getCategoryMeta } from '@/lib/categories';
+import { useArticleViews } from '@/hooks/useArticleViews';
 import DOMPurify from 'dompurify';
 
 export default function Article() {
@@ -73,13 +74,9 @@ export default function Article() {
     },
   });
 
-  // Per-article view records — readers can't write to Article, so views live here.
-  const { data: viewRecords = [] } = useQuery({
-    queryKey: ['article-views', articleId],
-    queryFn: () => base44.entities.ArticleView.filter({ article_id: articleId }, '-created_date', 10000),
-    enabled: !!articleId,
-  });
-  const totalViews = (article?.views_count || 0) + viewRecords.length;
+  // Aggregated view counts — fetched server-side for admins only.
+  const { viewsOf } = useArticleViews(user?.role === 'admin');
+  const totalViews = viewsOf(article);
 
   // One view per reader per article per day, guarded by a dated localStorage entry.
   useEffect(() => {
@@ -106,7 +103,7 @@ export default function Article() {
   const handleShare = async () => {
     base44.analytics.track({ eventName: 'article_share', properties: { article_id: articleId } });
     const shareUrl = article.slug
-      ? `${window.location.origin}/share/${article.slug}.html?v=2`
+      ? `https://raisingindia.net/functions/renderSharePage?slug=${encodeURIComponent(article.slug)}`
       : window.location.href;
     try {
       if (navigator.share) {
