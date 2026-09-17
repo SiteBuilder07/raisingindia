@@ -15,6 +15,26 @@ const escapeHtml = (value: unknown): string => {
     .replace(/'/g, '&#39;');
 };
 
+// Category-based fallback images (mirrors src/lib/categoryImages.js) so every
+// article gets a social preview image even without its own cover_image.
+const CATEGORY_IMAGES: Record<string, string> = {
+  newborn:        'https://images.unsplash.com/photo-1546015720-b8b30df5aa27?auto=format&fit=crop&w=800&q=80',
+  toddler:        'https://images.unsplash.com/photo-1607582544161-7e8be4b6e60c?auto=format&fit=crop&w=800&q=80',
+  education:      'https://images.unsplash.com/photo-1571260899304-425eee4c7efc?auto=format&fit=crop&w=800&q=80',
+  health:         'https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&w=800&q=80',
+  activities:     'https://images.unsplash.com/photo-1596464716127-f2a82984de30?auto=format&fit=crop&w=800&q=80',
+  nutrition:      'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?auto=format&fit=crop&w=800&q=80',
+  teen:           'https://images.unsplash.com/photo-1573497019418-b400bb3ab074?auto=format&fit=crop&w=800&q=80',
+  parenting:      'https://images.unsplash.com/photo-1542037104857-ffbb0b9155fb?auto=format&fit=crop&w=800&q=80',
+  motherhood:     'https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&w=800&q=80',
+  mental_health:  'https://images.unsplash.com/photo-1474418397763-88e81ad5e2c4?auto=format&fit=crop&w=800&q=80',
+};
+const DEFAULT_CATEGORY_IMAGE = CATEGORY_IMAGES.parenting;
+
+// Strips HTML tags and collapses whitespace to derive a text summary.
+const stripHtml = (html: string): string =>
+  html.replace(/<[^>]*>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
+
 export default async function (req: Request): Promise<Response> {
   try {
     const base44 = createClientFromRequest(req);
@@ -40,14 +60,16 @@ export default async function (req: Request): Promise<Response> {
     }
 
     const title = escapeHtml(article.title || 'RaisingIndia');
-    const description = escapeHtml((article.summary || '').slice(0, 300));
-    const image = escapeHtml(article.cover_image || '');
+    const description = escapeHtml(
+      (article.summary || stripHtml(article.content || '')).slice(0, 300)
+    );
+    const image = escapeHtml(
+      article.cover_image || CATEGORY_IMAGES[article.category] || DEFAULT_CATEGORY_IMAGE
+    );
     const articleUrl = `${SITE_ORIGIN}/article/${encodeURIComponent(slug)}`;
     const shareUrl = `${SITE_ORIGIN}/functions/renderSharePage?slug=${encodeURIComponent(slug)}`;
 
-    const imageTags = image
-      ? `<meta property="og:image" content="${image}">\n  <meta name="twitter:image" content="${image}">`
-      : '';
+    const imageTags = `<meta property="og:image" content="${image}">\n  <meta name="twitter:image" content="${image}">`;
 
     const html = `<!DOCTYPE html>
 <html lang="en">
