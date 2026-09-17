@@ -2,9 +2,9 @@
  * Small helpers to keep page title, description and social preview tags
  * in sync with the content being viewed.
  */
-const DEFAULT_TITLE = 'RaisingIndia — Expert Parenting Tips for Indian Families';
+const DEFAULT_TITLE = 'RaisingIndia (Raising India) — Expert Parenting Tips for Indian Families';
 const DEFAULT_DESCRIPTION =
-  'Expert parenting tips, child development insights and education advice for Indian families, all in one place.';
+  'Raising India — expert parenting tips, child development insights and education advice for Indian families, all in one place.';
 
 function setTag(selector, attr, value) {
   if (!value) return;
@@ -38,6 +38,7 @@ export function setPageMeta({ title, description, image, url } = {}) {
 
   document.title = fullTitle;
   setTag('meta[name="description"]', 'content', desc);
+  setTag('meta[name="keywords"]', 'content', 'Raising India, RaisingIndia, parenting tips India, child development India, Indian families, motherhood India, parenting advice India');
   setTag('meta[property="og:title"]', 'content', fullTitle);
   setTag('meta[property="og:description"]', 'content', desc);
   setTag('meta[property="og:url"]', 'content', pageUrl);
