@@ -26,11 +26,12 @@ export default function Search() {
     if (!query.trim()) return [];
     const q = query.toLowerCase();
     return articles.filter(a =>
-      a.title?.toLowerCase().includes(q) ||
-      a.summary?.toLowerCase().includes(q) ||
-      a.category?.toLowerCase().includes(q) ||
-      a.author_name?.toLowerCase().includes(q) ||
-      a.tags?.some(t => t.toLowerCase().includes(q))
+      !a.is_interview && !a.is_blog &&
+      (a.title?.toLowerCase().includes(q) ||
+       a.summary?.toLowerCase().includes(q) ||
+       a.category?.toLowerCase().includes(q) ||
+       a.author_name?.toLowerCase().includes(q) ||
+       a.tags?.some(t => t.toLowerCase().includes(q)))
     );
   }, [query, articles]);
 

@@ -24,7 +24,8 @@ export default function Categories() {
     return resetPageMeta;
   }, []);
 
-  const filtered = selected ? articles.filter(a => a.category === selected) : articles;
+  const regularArticles = articles.filter(a => !a.is_interview && !a.is_blog);
+  const filtered = selected ? regularArticles.filter(a => a.category === selected) : regularArticles;
 
   const toggle = (value) => {
     const next = new URLSearchParams(searchParams);
@@ -43,7 +44,7 @@ export default function Categories() {
       {/* Category Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-10">
         {CATEGORIES.map(({ value, label, emoji, color }) => {
-          const count = articles.filter(a => a.category === value).length;
+          const count = regularArticles.filter(a => a.category === value).length;
           const isActive = selected === value;
           return (
             <button

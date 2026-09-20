@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Plus, FileText, Eye, BarChart3, Users, BookOpen } from 'lucide-react';
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { Navigate, Link } from 'react-router-dom';
 const ArticleEditor = lazy(() => import('@/components/admin/ArticleEditor'));
 import AdminArticlesTab from '@/components/admin/AdminArticlesTab';
@@ -21,6 +22,7 @@ export default function Admin() {
   const queryClient = useQueryClient();
   const [editingArticle, setEditingArticle] = useState(null);
   const [showEditor, setShowEditor] = useState(false);
+  const [contentType, setContentType] = useState('article');
 
   const { data: articles = [] } = useQuery({
     queryKey: ['admin-articles'],
@@ -45,8 +47,9 @@ export default function Admin() {
     setShowEditor(true);
   };
 
-  const handleNew = () => {
+  const handleNew = (type = 'article') => {
     setEditingArticle(null);
+    setContentType(type);
     setShowEditor(true);
   };
 
@@ -64,7 +67,7 @@ export default function Admin() {
           ← Back to Dashboard
         </Button>
         <Suspense fallback={<div className="py-12 text-center text-muted-foreground">Loading editor…</div>}>
-          <ArticleEditor article={editingArticle} onSave={handleSaved} />
+          <ArticleEditor article={editingArticle} contentType={contentType} onSave={handleSaved} />
         </Suspense>
       </div>
     );
@@ -81,9 +84,18 @@ export default function Admin() {
           <Button variant="outline" asChild className="gap-2">
             <Link to="/AdminGuide"><BookOpen className="w-4 h-4" /> Guide</Link>
           </Button>
-          <Button onClick={handleNew} className="gap-2">
-            <Plus className="w-4 h-4" /> New Article
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button className="gap-2">
+                <Plus className="w-4 h-4" /> New Content
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => handleNew('article')}>New Article</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleNew('interview')}>New Interview</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleNew('blog')}>New Blog Post</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
 
@@ -112,6 +124,8 @@ export default function Admin() {
       <Tabs defaultValue="articles">
         <TabsList className="flex-wrap">
           <TabsTrigger value="articles">Articles</TabsTrigger>
+          <TabsTrigger value="interviews">Interviews</TabsTrigger>
+          <TabsTrigger value="blogs">Blogs</TabsTrigger>
           <TabsTrigger value="spotlight">Spotlight</TabsTrigger>
           <TabsTrigger value="podcasts">Podcasts</TabsTrigger>
           <TabsTrigger value="comments">Comments</TabsTrigger>
@@ -121,7 +135,13 @@ export default function Admin() {
         </TabsList>
 
         <TabsContent value="articles" className="mt-6">
-          <AdminArticlesTab onEdit={handleEdit} />
+          <AdminArticlesTab onEdit={handleEdit} contentType="article" />
+        </TabsContent>
+        <TabsContent value="interviews" className="mt-6">
+          <AdminArticlesTab onEdit={handleEdit} contentType="interview" />
+        </TabsContent>
+        <TabsContent value="blogs" className="mt-6">
+          <AdminArticlesTab onEdit={handleEdit} contentType="blog" />
         </TabsContent>
         <TabsContent value="spotlight" className="mt-6">
           <AdminSpotlightTab />

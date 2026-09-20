@@ -5,6 +5,7 @@ import FeaturedArticleSection from '@/components/home/FeaturedArticleSection';
 import LatestArticlesScroll from '@/components/home/LatestArticlesScroll';
 import SpotlightSection from '@/components/home/SpotlightSection';
 import PodcastSection from '@/components/home/PodcastSection';
+import BlogSection from '@/components/home/BlogSection';
 import WelcomeHero from '@/components/home/WelcomeHero';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -15,11 +16,13 @@ export default function Home() {
   });
 
   const breakingArticles = articles.filter(a => a.is_breaking);
-  const featuredArticle = articles.find(a => a.is_featured);
+  const regularArticles = articles.filter(a => !a.is_interview && !a.is_blog);
+  const featuredArticle = regularArticles.find(a => a.is_featured);
   const interviewArticle = articles.find(a => a.is_interview);
-  const sideArticles = articles.filter(a => a.id !== featuredArticle?.id).slice(0, 3);
+  const blogArticles = articles.filter(a => a.is_blog);
+  const sideArticles = regularArticles.filter(a => a.id !== featuredArticle?.id).slice(0, 3);
   const sideArticleIds = new Set(sideArticles.map(a => a.id));
-  const latestArticles = articles.filter(a => a.id !== featuredArticle?.id && !sideArticleIds.has(a.id)).slice(0, 12);
+  const latestArticles = regularArticles.filter(a => a.id !== featuredArticle?.id && !sideArticleIds.has(a.id)).slice(0, 12);
 
   return (
     <div className="bg-background min-h-screen">
@@ -31,7 +34,8 @@ export default function Home() {
           <FeaturedArticleSection article={featuredArticle} sideArticles={sideArticles} />
           <LatestArticlesScroll articles={latestArticles} totalCount={articles.length} />
           <PodcastSection interviewArticle={interviewArticle} />
-          <SpotlightSection recentArticles={articles.slice(0, 2)} />
+          <BlogSection articles={blogArticles} />
+          <SpotlightSection recentArticles={regularArticles.slice(0, 2)} />
         </>
       )}
 

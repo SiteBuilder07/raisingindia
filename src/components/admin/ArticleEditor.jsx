@@ -23,7 +23,7 @@ const toLocalInput = (iso) => {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 };
 
-export default function ArticleEditor({ article, onSave }) {
+export default function ArticleEditor({ article, onSave, contentType = 'article' }) {
   const { user } = useAuth();
   const isEditing = !!article;
 
@@ -39,8 +39,8 @@ export default function ArticleEditor({ article, onSave }) {
     status: article?.status || 'draft',
     is_featured: article?.is_featured || false,
     is_breaking: article?.is_breaking || false,
-    is_interview: article?.is_interview || false,
-    is_blog: article?.is_blog || false,
+    is_interview: article?.is_interview || contentType === 'interview',
+    is_blog: article?.is_blog || contentType === 'blog',
     interview_quote: article?.interview_quote || '',
     interview_quote_author: article?.interview_quote_author || '',
     tags: article?.tags || [],
@@ -111,7 +111,9 @@ export default function ArticleEditor({ article, onSave }) {
   return (
     <div className="space-y-6">
       <h2 className="font-display text-2xl font-bold">
-        {isEditing ? 'Edit Article' : 'New Article'}
+        {isEditing
+          ? `Edit ${article.is_interview ? 'Interview' : article.is_blog ? 'Blog Post' : 'Article'}`
+          : `New ${contentType === 'interview' ? 'Interview' : contentType === 'blog' ? 'Blog Post' : 'Article'}`}
       </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

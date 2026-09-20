@@ -9,7 +9,7 @@ import { toast } from 'sonner';
 import ConfirmDeleteDialog from './ConfirmDeleteDialog';
 import { useArticleViews } from '@/hooks/useArticleViews';
 
-export default function AdminArticlesTab({ onEdit }) {
+export default function AdminArticlesTab({ onEdit, contentType = 'article' }) {
   const queryClient = useQueryClient();
   const [deleteId, setDeleteId] = useState(null);
   const { viewsOf } = useArticleViews();
@@ -17,6 +17,12 @@ export default function AdminArticlesTab({ onEdit }) {
   const { data: articles = [] } = useQuery({
     queryKey: ['admin-articles'],
     queryFn: () => base44.entities.Article.list('-created_date', 100),
+  });
+
+  const filtered = articles.filter(a => {
+    if (contentType === 'interview') return a.is_interview;
+    if (contentType === 'blog') return a.is_blog;
+    return !a.is_interview && !a.is_blog;
   });
 
   const deleteArticle = useMutation({
@@ -69,7 +75,7 @@ export default function AdminArticlesTab({ onEdit }) {
 
   return (
     <div className="space-y-3">
-      {articles.map(article => (
+      {filtered.map(article => (
         <div key={article.id} className="flex items-center justify-between bg-card border border-border rounded-xl p-4">
           <div className="flex-1 min-w-0 mr-4">
             <div className="flex items-center gap-2 mb-1">
@@ -106,7 +112,7 @@ export default function AdminArticlesTab({ onEdit }) {
           </div>
         </div>
       ))}
-      {articles.length === 0 && (
+      {filtered.length === 0 && (
         <div className="text-center py-12 text-muted-foreground">
           No articles yet. Create your first one!
         </div>
