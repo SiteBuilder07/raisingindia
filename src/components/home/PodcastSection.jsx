@@ -67,18 +67,17 @@ export default function PodcastSection({ interviewArticle }) {
                   🎙️ THE INTERVIEW
                 </span>
               </div>
-              <h3 className="font-display text-2xl font-black leading-tight mb-1">The Interview</h3>
+              <h3 className="font-display text-2xl font-black leading-tight mb-1">{interviewArticle.title}</h3>
               <p className="text-sm text-muted-foreground font-medium mb-5">
                 Conversations with experts, educators, and parents.
               </p>
               <blockquote className="font-display text-xl font-black leading-snug text-foreground mb-4">
-                "{interviewArticle.summary?.slice(0, 80) || interviewArticle.title}"
+                "{interviewArticle.interview_quote || interviewArticle.summary || interviewArticle.title}"
               </blockquote>
-              {interviewArticle.author_name && (
-                <div className="flex items-center gap-3 mb-6">
-                  <AuthorAvatar name={interviewArticle.author_name} src={interviewArticle.author_avatar} size="md" />
-                  <p className="text-sm text-muted-foreground font-semibold">{interviewArticle.author_name}</p>
-                </div>
+              {interviewArticle.interview_quote_author && (
+                <p className="text-sm text-muted-foreground font-semibold mb-6">
+                  — {interviewArticle.interview_quote_author}
+                </p>
               )}
             </div>
             <Link to={articleUrl(interviewArticle)}>

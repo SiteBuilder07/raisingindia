@@ -41,6 +41,8 @@ export default function ArticleEditor({ article, onSave }) {
     is_breaking: article?.is_breaking || false,
     is_interview: article?.is_interview || false,
     is_blog: article?.is_blog || false,
+    interview_quote: article?.interview_quote || '',
+    interview_quote_author: article?.interview_quote_author || '',
     tags: article?.tags || [],
     reading_time_minutes: article?.reading_time_minutes || 5,
     published_date: article?.published_date || new Date().toISOString(),
@@ -242,6 +244,28 @@ export default function ArticleEditor({ article, onSave }) {
             <Label>From the Blog</Label>
           </div>
         </div>
+
+        {form.is_interview && (
+          <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-accent/5 border border-accent/20 rounded-xl">
+            <div className="space-y-2">
+              <Label>Interview Quote</Label>
+              <Textarea
+                value={form.interview_quote}
+                onChange={(e) => handleChange('interview_quote', e.target.value)}
+                placeholder="Pull-quote shown on the home screen..."
+                className="h-20"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Quote Author (who said it)</Label>
+              <Input
+                value={form.interview_quote_author}
+                onChange={(e) => handleChange('interview_quote_author', e.target.value)}
+                placeholder="e.g. Dr. Anjali Sharma"
+              />
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="space-y-2">

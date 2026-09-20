@@ -76,6 +76,14 @@
       "default": false,
       "description": "Show in the From the Blog section"
     },
+    "interview_quote": {
+      "type": "string",
+      "description": "Pull-quote shown in The Interview section on the home screen"
+    },
+    "interview_quote_author": {
+      "type": "string",
+      "description": "Attribution for the interview pull-quote (who said it)"
+    },
     "tags": {
       "type": "array",
       "items": {
