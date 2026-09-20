@@ -3,8 +3,9 @@ import { base44 } from '@/api/base44Client';
 import BreakingNewsBanner from '@/components/news/BreakingNewsBanner';
 import FeaturedArticleSection from '@/components/home/FeaturedArticleSection';
 import LatestArticlesScroll from '@/components/home/LatestArticlesScroll';
-import SpotlightSection from '@/components/home/SpotlightSection';
 import PodcastSection from '@/components/home/PodcastSection';
+import BlogColumn from '@/components/home/BlogColumn';
+import InterviewList from '@/components/home/InterviewList';
 import WelcomeHero from '@/components/home/WelcomeHero';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -32,7 +33,12 @@ export default function Home() {
           <FeaturedArticleSection article={featuredArticle} sideArticles={sideArticles} />
           <LatestArticlesScroll articles={latestArticles} totalCount={articles.length} />
           <PodcastSection interviewArticle={interviewArticle} />
-          <SpotlightSection recentArticles={regularArticles.slice(0, 2)} />
+          <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-16">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <BlogColumn fallbackArticles={regularArticles.slice(0, 2)} />
+              <InterviewList excludeId={interviewArticle?.id} />
+            </div>
+          </section>
         </>
       )}
 

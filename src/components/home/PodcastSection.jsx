@@ -17,7 +17,8 @@ export default function PodcastSection({ interviewArticle }) {
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 py-8 pb-16">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Video Podcast Player */}
+        {/* Video Podcast Player + See More Episodes */}
+        <div className="flex flex-col gap-4">
         <div className="relative rounded-3xl overflow-hidden bg-gray-900 text-white flex flex-col min-h-[280px]">
           {/* Cover preview — full video plays on the episode page */}
           {podcast?.cover_image ? (
@@ -56,6 +57,16 @@ export default function PodcastSection({ interviewArticle }) {
               </Link>
             )}
           </div>
+        </div>
+        {podcasts.length > 0 && (
+          <div className="flex justify-center">
+            <Link to="/Podcasts">
+              <Button variant="outline" className="rounded-full font-bold gap-2 border-2">
+                See More Episodes <ArrowRight className="w-4 h-4" />
+              </Button>
+            </Link>
+          </div>
+        )}
         </div>
 
         {/* Featured Interview / Quote */}
@@ -98,16 +109,6 @@ export default function PodcastSection({ interviewArticle }) {
           </div>
         )}
       </div>
-
-      {podcasts.length > 0 && (
-        <div className="flex justify-center mt-6">
-          <Link to="/Podcasts">
-            <Button variant="outline" className="rounded-full font-bold gap-2 border-2">
-              See More Episodes <ArrowRight className="w-4 h-4" />
-            </Button>
-          </Link>
-        </div>
-      )}
     </section>
   );
 }
