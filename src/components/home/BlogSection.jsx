@@ -1,4 +1,4 @@
-import ArticleCard from '@/components/news/ArticleCard';
+import BlogCard from '@/components/home/BlogCard';
 
 export default function BlogSection({ articles = [] }) {
   if (!articles.length) return null;
@@ -11,9 +11,9 @@ export default function BlogSection({ articles = [] }) {
           Personal stories, reflections, and ideas from our community
         </p>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {articles.slice(0, 3).map(article => (
-          <ArticleCard key={article.id} article={article} />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {articles.slice(0, 6).map(article => (
+          <BlogCard key={article.id} article={article} />
         ))}
       </div>
     </section>
