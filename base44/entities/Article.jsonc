@@ -76,6 +76,11 @@
       "default": false,
       "description": "Show in the From the Blog section"
     },
+    "is_suggested_read": {
+      "type": "boolean",
+      "default": false,
+      "description": "Show in the Suggested Read popup on the homepage"
+    },
     "interview_quote": {
       "type": "string",
       "description": "Pull-quote shown in The Interview section on the home screen"

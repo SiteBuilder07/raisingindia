@@ -6,6 +6,7 @@ import LatestArticlesScroll from '@/components/home/LatestArticlesScroll';
 import PodcastSection from '@/components/home/PodcastSection';
 import BlogColumn from '@/components/home/BlogColumn';
 import InterviewList from '@/components/home/InterviewList';
+import SuggestedReadPopup from '@/components/home/SuggestedReadPopup';
 import WelcomeHero from '@/components/home/WelcomeHero';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -25,6 +26,7 @@ export default function Home() {
 
   return (
     <div className="bg-background min-h-screen">
+      <SuggestedReadPopup />
       <BreakingNewsBanner articles={breakingArticles} />
 
       {!isLoading && (
