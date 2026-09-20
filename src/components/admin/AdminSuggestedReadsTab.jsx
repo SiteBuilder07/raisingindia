@@ -36,6 +36,8 @@ export default function AdminSuggestedReadsTab() {
           <div className="flex-1 min-w-0 mr-4">
             <div className="flex items-center gap-2 mb-1">
               <Badge variant="outline" className="text-xs">{article.category.replace(/_/g, ' ')}</Badge>
+              {article.is_interview && <Badge variant="secondary" className="text-xs">Interview</Badge>}
+              {article.is_blog && <Badge variant="secondary" className="text-xs">Blog</Badge>}
               {article.is_suggested_read && <Badge className="bg-accent text-accent-foreground text-xs border-0">Suggested</Badge>}
             </div>
             <h3 className="font-semibold truncate">{article.title}</h3>
