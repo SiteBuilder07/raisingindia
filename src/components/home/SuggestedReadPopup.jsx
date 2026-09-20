@@ -49,11 +49,11 @@ export default function SuggestedReadPopup() {
     <AnimatePresence>
       {visible && (
         <motion.div
-          initial={{ opacity: 0, y: 24, x: -8 }}
+          initial={{ opacity: 0, y: 24, x: 8 }}
           animate={{ opacity: 1, y: 0, x: 0 }}
-          exit={{ opacity: 0, y: 24, x: -8 }}
+          exit={{ opacity: 0, y: 24, x: 8 }}
           transition={{ duration: 0.4, ease: 'easeOut' }}
-          className="fixed bottom-5 left-5 z-50 max-w-xs"
+          className="fixed bottom-5 right-5 z-50 max-w-xs"
         >
           <div className="relative bg-white border-2 border-border rounded-2xl shadow-xl overflow-hidden">
             <button
