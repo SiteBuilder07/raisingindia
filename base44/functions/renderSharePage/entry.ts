@@ -40,12 +40,52 @@ export default async function (req: Request): Promise<Response> {
     const base44 = createClientFromRequest(req);
     const url = new URL(req.url);
 
-    // Social crawlers send GET requests with the slug as a query param.
-    // SDK invocations pass it in the body.
-    let slug = url.searchParams.get('slug');
-    if (!slug) {
-      const body = await req.json().catch(() => ({}));
-      slug = body?.slug;
+    // Social crawlers send GET requests with the slug/podcast_id as a query param.
+    // SDK invocations pass it in the body. Read the body once.
+    const body = await req.json().catch(() => ({}));
+    const slug = url.searchParams.get('slug') || body?.slug;
+    const podcastId = url.searchParams.get('podcast_id') || body?.podcast_id;
+
+    if (podcastId) {
+      const podcast = await base44.asServiceRole.entities.Podcast.get(podcastId).catch(() => null);
+      if (!podcast) {
+        return new Response('Podcast not found', { status: 404 });
+      }
+      const pTitle = escapeHtml(podcast.title || 'RaisingIndia Podcast');
+      const pDesc = escapeHtml((podcast.description || 'Listen to the RaisingIndia podcast').slice(0, 300));
+      const pImage = escapeHtml(podcast.cover_image || DEFAULT_CATEGORY_IMAGE);
+      const pUrl = `${SITE_ORIGIN}/PodcastEpisode?id=${encodeURIComponent(podcast.id)}`;
+      const pShareUrl = `${SITE_ORIGIN}/functions/renderSharePage?podcast_id=${encodeURIComponent(podcast.id)}`;
+
+      const pHtml = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>${pTitle}</title>
+  <meta name="description" content="${pDesc}">
+  <link rel="canonical" href="${pShareUrl}">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="${pTitle}">
+  <meta property="og:description" content="${pDesc}">
+  <meta property="og:image" content="${pImage}">
+  <meta name="twitter:image" content="${pImage}">
+  <meta property="og:url" content="${pShareUrl}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="${pTitle}">
+  <meta name="twitter:description" content="${pDesc}">
+  <meta http-equiv="refresh" content="0;url=${pUrl}">
+</head>
+<body>
+  <noscript>
+    <p>This episode has moved. <a href="${pUrl}">Listen on RaisingIndia</a>.</p>
+  </noscript>
+</body>
+</html>`;
+
+      return new Response(pHtml, {
+        status: 200,
+        headers: { 'Content-Type': 'text/html; charset=utf-8' },
+      });
     }
 
     if (!slug || typeof slug !== 'string') {

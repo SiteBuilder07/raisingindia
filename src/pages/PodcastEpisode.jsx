@@ -65,8 +65,7 @@ export default function PodcastEpisode() {
   const otherEpisodes = allEpisodes.filter(e => e.id !== episode.id).slice(0, 4);
 
   const handleShare = async () => {
-    const slug = episode.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-    const shareUrl = `${window.location.origin}/share/podcast-${slug}.html`;
+    const shareUrl = `https://raisingindia.net/functions/renderSharePage?podcast_id=${encodeURIComponent(episode.id)}`;
     base44.analytics.track({ eventName: 'podcast_share', properties: { episode_id: episode.id } });
     if (navigator.share) {
       await navigator.share({ title: episode.title, url: shareUrl });
