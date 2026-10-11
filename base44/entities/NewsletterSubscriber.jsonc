@@ -15,6 +15,10 @@
       "default": true,
       "description": "Whether subscription is active"
     },
+    "client_ip": {
+      "type": "string",
+      "description": "Subscriber IP (admin-only, used for server-side rate limiting)"
+    },
     "description": {
       "type": "string",
       "maxLength": 1000,

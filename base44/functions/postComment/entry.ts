@@ -1,6 +1,7 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
 import { isValidEmail, normalizeEmail, cleanText } from '../../shared/validation.ts';
 import { isAllowedOrigin } from '../../shared/originCheck.ts';
+import { getClientIp } from '../../shared/clientIp.ts';
 
 const RATE_WINDOW_MS = 5 * 60 * 1000;
 const RATE_MAX = 3;
@@ -57,12 +58,33 @@ export default async function (req: Request): Promise<Response> {
       );
     }
 
+    // Anonymous posters: rate limit by the server-derived IP, not the
+    // body-supplied email, so rotating authorEmail on every request can no
+    // longer bypass the per-email limit. Logged-in users are throttled by
+    // their server-derived email above and their IP is recorded for audit.
+    const clientIp = getClientIp(req);
+    if (!user) {
+      const recentIp = await base44.asServiceRole.entities.Comment.filter(
+        { client_ip: clientIp },
+        '-created_date',
+        RATE_MAX
+      );
+      const withinIpWindow = recentIp.filter((c) => new Date(c.created_date).getTime() > cutoff);
+      if (withinIpWindow.length >= RATE_MAX) {
+        return Response.json(
+          { error: 'You are posting too quickly. Please wait a few minutes.' },
+          { status: 429 }
+        );
+      }
+    }
+
     const isApproved = !!user;
     await base44.asServiceRole.entities.Comment.create({
       article_id: articleId,
       content,
       author_name: authorName,
       author_email: authorEmail,
+      client_ip: clientIp,
       is_approved: isApproved,
     });
 

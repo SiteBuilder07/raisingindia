@@ -18,6 +18,17 @@
       "type": "string",
       "description": "Comment text"
     },
+    "client_ip": {
+      "type": "string",
+      "description": "Commenter IP (admin-only, used for server-side rate limiting)",
+      "rls": {
+        "read": {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      }
+    },
     "is_approved": {
       "type": "boolean",
       "default": false,
