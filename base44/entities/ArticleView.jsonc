@@ -16,8 +16,12 @@
     "article_id"
   ],
   "rls": {
-    "read": {},
-    "create": {},
+    "create": null,
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
     "update": {
       "user_condition": {
         "role": "admin"
