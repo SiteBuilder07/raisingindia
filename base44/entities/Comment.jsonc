@@ -40,6 +40,11 @@
     "content"
   ],
   "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
     "read": {
       "$or": [
         {
@@ -51,11 +56,6 @@
           }
         }
       ]
-    },
-    "create": {
-      "data.is_approved": {
-        "$ne": true
-      }
     },
     "update": {
       "user_condition": {
