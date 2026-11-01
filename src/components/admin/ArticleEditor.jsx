@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
+import { contentBytes, uploadArticleContent, fetchArticleContent, MAX_INLINE_CONTENT_BYTES } from '@/lib/articleContent';
 import { useAuth } from '@/lib/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -50,6 +51,18 @@ export default function ArticleEditor({ article, onSave, contentType = 'article'
   const [tagsInput, setTagsInput] = useState((article?.tags || []).join(', '));
   const [saving, setSaving] = useState(false);
   const [uploadingCover, setUploadingCover] = useState(false);
+  const [loadingContent, setLoadingContent] = useState(false);
+
+  // Long articles keep their HTML in a private file; load it back so editing
+  // continues from the full text instead of an empty editor.
+  useEffect(() => {
+    if (!article?.content_file_uri || article.content) return;
+    setLoadingContent(true);
+    fetchArticleContent(article.id)
+      .then((html) => setForm(prev => ({ ...prev, content: html })))
+      .catch(() => toast.error('Could not load the saved article content'))
+      .finally(() => setLoadingContent(false));
+  }, [article]);
 
   const handleCoverUpload = async (e) => {
     const file = e.target.files?.[0];
@@ -93,6 +106,15 @@ export default function ArticleEditor({ article, onSave, contentType = 'article'
     };
 
     try {
+      // Content too large for the record is stored as a private file, and the
+      // record keeps a reference instead of the HTML itself.
+      if (contentBytes(data.content) > MAX_INLINE_CONTENT_BYTES) {
+        data.content_file_uri = await uploadArticleContent(data.content);
+        data.content = '';
+      } else {
+        data.content_file_uri = '';
+      }
+
       if (isEditing) {
         await base44.entities.Article.update(article.id, data);
         toast.success('Article updated');
@@ -272,6 +294,11 @@ export default function ArticleEditor({ article, onSave, contentType = 'article'
 
       <div className="space-y-2">
         <Label>Content</Label>
+        {loadingContent && (
+          <p className="text-xs text-muted-foreground flex items-center gap-2">
+            <Loader2 className="w-3 h-3 animate-spin" /> Loading the saved article content…
+          </p>
+        )}
         <ReactQuill
           value={form.content}
           onChange={(v) => handleChange('content', v)}
@@ -281,10 +308,10 @@ export default function ArticleEditor({ article, onSave, contentType = 'article'
       </div>
 
       <div className="flex gap-3 pt-4">
-        <Button variant="outline" onClick={() => handleSave('draft')} disabled={saving} className="gap-2">
+        <Button variant="outline" onClick={() => handleSave('draft')} disabled={saving || loadingContent} className="gap-2">
           <Save className="w-4 h-4" /> Save Draft
         </Button>
-        <Button onClick={() => handleSave('published')} disabled={saving} className="gap-2">
+        <Button onClick={() => handleSave('published')} disabled={saving || loadingContent} className="gap-2">
           <Send className="w-4 h-4" /> Publish
         </Button>
       </div>

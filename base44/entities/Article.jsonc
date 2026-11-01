@@ -16,7 +16,11 @@
     },
     "content": {
       "type": "string",
-      "description": "Full article content in HTML"
+      "description": "Full article content in HTML (used when it fits the record size limit)"
+    },
+    "content_file_uri": {
+      "type": "string",
+      "description": "Private file URI holding the full HTML for articles too large to store in the content field"
     },
     "category": {
       "type": "string",

@@ -17,6 +17,7 @@ import { getCategoryImage } from '@/lib/categoryImages';
 import { getCategoryMeta } from '@/lib/categories';
 import { useArticleViews } from '@/hooks/useArticleViews';
 import DOMPurify from 'dompurify';
+import { fetchArticleContent } from '@/lib/articleContent';
 
 export default function Article() {
   const { slug } = useParams();
@@ -37,6 +38,14 @@ export default function Article() {
   });
 
   const articleId = article?.id || idParam;
+
+  // File-backed articles keep their HTML outside the record; load it on demand.
+  const { data: fileContent, isLoading: isLoadingContent } = useQuery({
+    queryKey: ['article-content', articleId, article?.content_file_uri],
+    queryFn: () => fetchArticleContent(articleId),
+    enabled: !!article?.content_file_uri,
+  });
+  const content = article?.content_file_uri ? (fileContent || '') : (article?.content || '');
 
   const { data: authorProfiles = [] } = useQuery({
     queryKey: ['authors'],
@@ -124,7 +133,7 @@ export default function Article() {
     }
   };
 
-  if (isLoading) {
+  if (isLoading || isLoadingContent) {
     return (
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 space-y-6">
         <Skeleton className="h-8 w-48" />
@@ -148,7 +157,7 @@ export default function Article() {
 
   // Auto-estimate reading time from content if not explicitly set
   const readingTime = article.reading_time_minutes ||
-    (article.content ? Math.max(1, Math.ceil(article.content.replace(/<[^>]*>/g, ' ').split(/\s+/).filter(Boolean).length / 200)) : null);
+    (content ? Math.max(1, Math.ceil(content.replace(/<[^>]*>/g, ' ').split(/\s+/).filter(Boolean).length / 200)) : null);
 
   return (
     <article className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
@@ -257,7 +266,7 @@ export default function Article() {
           prose-ul:my-5 prose-ol:my-5 prose-li:my-1.5 prose-li:leading-[1.7]
           prose-blockquote:border-l-4 prose-blockquote:border-accent prose-blockquote:bg-secondary/60 prose-blockquote:rounded-r-xl prose-blockquote:py-2 prose-blockquote:px-5 prose-blockquote:not-italic prose-blockquote:font-medium
           prose-img:rounded-2xl prose-img:my-6"
-        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(article.content || '', { FORBID_TAGS: ['script'], FORBID_ATTR: ['onerror', 'onload', 'onclick', 'onmouseover'] }).replace(/&nbsp;/g, ' ').replace(/\u00A0/g, ' ') }}
+        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content, { FORBID_TAGS: ['script'], FORBID_ATTR: ['onerror', 'onload', 'onclick', 'onmouseover'] }).replace(/&nbsp;/g, ' ').replace(/\u00A0/g, ' ') }}
       />
 
       {/* Tags */}
