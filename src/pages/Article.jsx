@@ -87,15 +87,18 @@ export default function Article() {
   const { viewsOf } = useArticleViews(user?.role === 'admin');
   const totalViews = viewsOf(article);
 
-  // One view per reader per article per day, guarded by a dated localStorage entry.
+  // Views are counted by the backend function only — it applies the origin check
+  // and the per-IP-per-article-per-day dedupe, which a browser cannot. The dated
+  // localStorage entry just avoids a redundant request per visit.
   useEffect(() => {
-    if (!articleId) return;
-    const key = `viewed:${articleId}`;
+    const viewedId = article?.id;
+    if (!viewedId) return;
+    const key = `viewed:${viewedId}`;
     const today = new Date().toISOString().slice(0, 10);
     if (localStorage.getItem(key) === today) return;
     localStorage.setItem(key, today);
-    base44.entities.ArticleView.create({ article_id: articleId }).catch(() => {});
-  }, [articleId]);
+    base44.functions.invoke('incrementArticleView', { articleId: viewedId }).catch(() => {});
+  }, [article?.id]);
 
   // SEO — title, description and social preview tags
   useEffect(() => {

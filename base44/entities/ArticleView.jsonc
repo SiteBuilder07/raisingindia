@@ -9,14 +9,18 @@
     "description": {
       "type": "string",
       "maxLength": 1000,
-      "description": "Optional notes or description for this view record"
+      "description": "Server-written dedupe key (view:<ip>:<article>:<date>)"
     }
   },
   "required": [
     "article_id"
   ],
   "rls": {
-    "create": null,
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
     "read": {
       "user_condition": {
         "role": "admin"
